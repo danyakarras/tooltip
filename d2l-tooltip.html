@@ -85,21 +85,21 @@
 				if (this.for) {
 					target = Polymer.dom(ownerRoot).querySelector('#' + this.for);
 				} else {
-					target = parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE ? ownerRoot.host : parentNode;
+					target = parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? ownerRoot.host : parentNode;
 				}
 
 				return target;
 			},
 
-			attached: function () {
+			attached: function() {
 				this._findTarget();
 			},
 
-			detached: function () {
+			detached: function() {
 				this._removeListeners();
 			},
 
-			show: function () {
+			show: function() {
 				if (this._showing) {
 					return;
 				}
@@ -124,14 +124,14 @@
 				this.updatePosition();
 			},
 
-			hide: function () {
+			hide: function() {
 				if (this._showing) {
 					this._showing = false;
 					this.toggleClass('hidden', true, this.$.tooltip);
 				}
 			},
 
-			updatePosition: function () {
+			updatePosition: function() {
 				if (!this._target || !this.offsetParent) {
 					return;
 				}
@@ -215,11 +215,11 @@
 
 			_removeListeners: function() {
 				if (this._target) {
-          this.unlisten(this._target, 'mouseenter', 'show');
-          this.unlisten(this._target, 'focus', 'show');
-          this.unlisten(this._target, 'mouseleave', 'hide');
-          this.unlisten(this._target, 'blur', 'hide');
-          this.unlisten(this._target, 'tap', 'hide');
+					this.unlisten(this._target, 'mouseenter', 'show');
+					this.unlisten(this._target, 'focus', 'show');
+					this.unlisten(this._target, 'mouseleave', 'hide');
+					this.unlisten(this._target, 'blur', 'hide');
+					this.unlisten(this._target, 'tap', 'hide');
 				}
 
 				this.unlisten(this, 'mouseenter', 'hide');
