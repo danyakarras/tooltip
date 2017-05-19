@@ -1,0 +1,229 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../d2l-colors/d2l-colors.html">
+<link rel="import" href="./d2l-rounded-triangle.html">
+
+<dom-module id="d2l-tooltip">
+	<template>
+		<style>
+			:host {
+				display: block;
+        position: absolute;
+        outline: none;
+        z-index: 1002;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        -webkit-user-select: none;
+        user-select: none;
+        cursor: default;
+			}
+
+			#tooltip {
+				display: block;
+				outline: none;
+				font-size: 14px;
+				line-height: 1;
+
+				background-color: var(--d2l-color-ferrite);
+				color: White;
+
+				padding: 8px;
+				border-radius: 5px;
+			}
+
+			.hidden {
+				display: none !important;
+			}
+
+			#triangle {
+				position: absolute;
+			}
+		</style>
+
+		<div id="tooltip" class="hidden">
+			<d2l-rounded-triangle id="triangle" orientation="[[ _getTriangleOrientation(position) ]]"></d2l-rounded-triangle>
+			<slot></slot>
+		</div>
+	</template>
+	<script>
+		'use strict';
+
+		Polymer({
+			is: 'd2l-tooltip',
+
+			hostAttributes: {
+				role: 'tooltip',
+				tabindex: -1
+			},
+
+			properties: {
+				for: {
+					type: String,
+					observer: '_findTarget'
+				},
+
+				position: {
+					type: String,
+					value: 'bottom'
+				},
+
+				offset: {
+					type: Number,
+					value: 8
+				},
+
+				_showing: {
+					type: Boolean,
+					value: false
+				}
+			},
+
+			get target() {
+				var parentNode = Polymer.dom(this).parentNode;
+				var ownerRoot = Polymer.dom(this).getOwnerRoot();
+
+				var target;
+				if (this.for) {
+					target = Polymer.dom(ownerRoot).querySelector('#' + this.for);
+				} else {
+					target = parentNode.nodeType == Node.DOCUMENT_FRAGMENT_NODE ? ownerRoot.host : parentNode;
+				}
+
+				return target;
+			},
+
+			attached: function () {
+				this._findTarget();
+			},
+
+			detached: function () {
+				this._removeListeners();
+			},
+
+			show: function () {
+				if (this._showing) {
+					return;
+				}
+
+				if (Polymer.dom(this).textContent.trim() === '') {
+					var allChildrenEmpty = true;
+					var effectiveChildren = Polymer.dom(this).getEffectiveChildNodes();
+					for (var i = 0; i < effectiveChildren.length; i++) {
+						if (effectiveChildren[i].textContent.trim() !== '') {
+							allChildrenEmpty = false;
+							break;
+						}
+					}
+
+					if (allChildrenEmpty) {
+						return;
+					}
+				}
+
+				this._showing = true;
+				this.toggleClass('hidden', false, this.$.tooltip);
+				this.updatePosition();
+			},
+
+			hide: function () {
+				if (this._showing) {
+					this._showing = false;
+					this.toggleClass('hidden', true, this.$.tooltip);
+				}
+			},
+
+			updatePosition: function () {
+				if (!this._target || !this.offsetParent) {
+					return;
+				}
+
+				var offset = this.offset;
+				var parentRect = this.offsetParent.getBoundingClientRect();
+				var targetRect = this._target.getBoundingClientRect();
+				var thisRect = this.getBoundingClientRect();
+
+				var horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
+				var verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
+
+				var targetLeft = targetRect.left - parentRect.left;
+				var targetTop = targetRect.top - parentRect.top;
+
+				var triangleOffset = -15;
+				var tooltipLeft, tooltipTop, triangleLeft, triangleTop;
+				switch (this.position) {
+					case 'top':
+						tooltipLeft = targetLeft + horizontalCenterOffset;
+						tooltipTop = targetTop - thisRect.height - offset;
+						triangleLeft = (thisRect.width / 2) + (triangleOffset + 2);
+						triangleTop = thisRect.height + (triangleOffset + 6);
+						break;
+					case 'bottom':
+						tooltipLeft = targetLeft + horizontalCenterOffset;
+						tooltipTop = targetTop + targetRect.height + offset;
+						triangleLeft = (thisRect.width / 2) + (triangleOffset + 2);
+						triangleTop = triangleOffset;
+						break;
+					case 'left':
+						tooltipLeft = targetLeft - thisRect.width - offset;
+						tooltipTop = targetTop + verticalCenterOffset;
+						triangleLeft = thisRect.width + (triangleOffset + 6);
+						triangleTop = (thisRect.height / 2) + (triangleOffset + 3);
+						break;
+					case 'right':
+						tooltipLeft = targetLeft + targetRect.width + offset;
+						tooltipTop = targetTop + verticalCenterOffset;
+						triangleLeft = triangleOffset;
+						triangleTop = (thisRect.height / 2) + (triangleOffset + 3);
+						break;
+				}
+
+				this.style.left = tooltipLeft + 'px';
+				this.style.top = tooltipTop + 'px';
+				this.$.triangle.style.left = triangleLeft + 'px';
+				this.$.triangle.style.top = triangleTop + 'px';
+			},
+
+			_addListeners: function() {
+				if (this._target) {
+					this.listen(this._target, 'mouseenter', 'show');
+					this.listen(this._target, 'focus', 'show');
+					this.listen(this._target, 'mouseleave', 'hide');
+					this.listen(this._target, 'blur', 'hide');
+					this.listen(this._target, 'tap', 'hide');
+				}
+
+				this.listen(this, 'mouseenter', 'hide');
+			},
+
+			_getTriangleOrientation: function(position) {
+				switch (position) {
+					case 'top':
+						return 'down';
+					case 'bottom':
+						return 'up';
+					case 'left':
+						return 'right';
+					case 'right':
+						return 'left';
+				}
+			},
+
+			_findTarget: function() {
+				this._removeListeners();
+				this._target = this.target;
+				this._addListeners();
+			},
+
+			_removeListeners: function() {
+				if (this._target) {
+          this.unlisten(this._target, 'mouseenter', 'show');
+          this.unlisten(this._target, 'focus', 'show');
+          this.unlisten(this._target, 'mouseleave', 'hide');
+          this.unlisten(this._target, 'blur', 'hide');
+          this.unlisten(this._target, 'tap', 'hide');
+				}
+
+				this.unlisten(this, 'mouseenter', 'hide');
+			}
+		});
+	</script>
+</dom-module>
