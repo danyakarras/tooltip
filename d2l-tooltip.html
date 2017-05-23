@@ -176,10 +176,34 @@
 						break;
 				}
 
-				this.style.left = tooltipLeft + 'px';
-				this.style.top = tooltipTop + 'px';
+				var pageMargins = this._getPageMargins();
+				this.style.left = (pageMargins.left + tooltipLeft) + 'px';
+				this.style.top = (pageMargins.top + tooltipTop) + 'px';
 				this.$.triangle.style.left = triangleLeft + 'px';
 				this.$.triangle.style.top = triangleTop + 'px';
+			},
+
+			_getPageMargins: function() {
+				var html = document.getElementsByTagName('html')[0];
+				var body = document.getElementsByTagName('body')[0];
+
+				var htmlStyle = window.getComputedStyle(html);
+				var bodyStyle = window.getComputedStyle(body);
+
+				var parseStyle = function(pxVal) {
+					return parseInt(pxVal, 10);
+				};
+
+				var combineStyles = function(attr) {
+					return parseStyle(htmlStyle.getPropertyValue(attr)) + parseStyle(bodyStyle.getPropertyValue(attr));
+				};
+
+				return {
+					top: combineStyles('margin-top'),
+					bottom: combineStyles('margin-bottom'),
+					left: combineStyles('margin-left'),
+					right: combineStyles('margin-right')
+				};
 			},
 
 			_addListeners: function() {
