@@ -137,7 +137,9 @@
 				}
 
 				var offset = this.offset;
-				var parentRect = this.offsetParent.getBoundingClientRect();
+				var parentRect = this.offsetParent.tagName === 'BODY' ?
+					{ left: 0, top: 0, right: 0, bottom: 0 } :
+					this.offsetParent.getBoundingClientRect();
 				var targetRect = this._target.getBoundingClientRect();
 				var thisRect = this.getBoundingClientRect();
 
@@ -176,34 +178,10 @@
 						break;
 				}
 
-				var pageMargins = this._getPageMargins();
-				this.style.left = (pageMargins.left + tooltipLeft) + 'px';
-				this.style.top = (pageMargins.top + tooltipTop) + 'px';
+				this.style.left = tooltipLeft + 'px';
+				this.style.top = tooltipTop + 'px';
 				this.$.triangle.style.left = triangleLeft + 'px';
 				this.$.triangle.style.top = triangleTop + 'px';
-			},
-
-			_getPageMargins: function() {
-				var html = document.getElementsByTagName('html')[0];
-				var body = document.getElementsByTagName('body')[0];
-
-				var htmlStyle = window.getComputedStyle(html);
-				var bodyStyle = window.getComputedStyle(body);
-
-				var parseStyle = function(pxVal) {
-					return parseInt(pxVal, 10);
-				};
-
-				var combineStyles = function(attr) {
-					return parseStyle(htmlStyle.getPropertyValue(attr)) + parseStyle(bodyStyle.getPropertyValue(attr));
-				};
-
-				return {
-					top: combineStyles('margin-top'),
-					bottom: combineStyles('margin-bottom'),
-					left: combineStyles('margin-left'),
-					right: combineStyles('margin-right')
-				};
 			},
 
 			_addListeners: function() {
