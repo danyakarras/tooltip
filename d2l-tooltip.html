@@ -7,14 +7,15 @@
 		<style>
 			:host {
 				display: block;
-        position: absolute;
-        outline: none;
-        z-index: 1002;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-user-select: none;
-        user-select: none;
-        cursor: default;
+				position: absolute;
+				outline: none;
+				z-index: 1002;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				-webkit-user-select: none;
+				user-select: none;
+				cursor: default;
+				pointer-events: none;
 			}
 
 			#tooltip {
@@ -61,6 +62,13 @@
 					observer: '_findTarget'
 				},
 
+				// An object with width, height, top, and left. If the property is present and
+				// is not equal to undefined, it will use the customTarget object for positioning.
+				customTarget: {
+					type: Object,
+					observer: 'updatePosition'
+				},
+
 				position: {
 					type: String,
 					value: 'bottom'
@@ -71,9 +79,19 @@
 					value: 8
 				},
 
+				whitespace: {
+					type: String,
+					value: ''
+				},
+
 				_showing: {
 					type: Boolean,
 					value: false
+				},
+
+				tooltipPadding: {
+					type: Number,
+					value: 0
 				}
 			},
 
@@ -84,6 +102,9 @@
 				var target;
 				if (this.for) {
 					target = Polymer.dom(ownerRoot).querySelector('#' + this.for);
+				} else if (this.customTarget !== undefined) {
+					// Set to undefined because it is not used - target is a DOM node, whereas customTarget is an object
+					target = undefined;
 				} else {
 					target = parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE ? ownerRoot.host : parentNode;
 				}
@@ -132,20 +153,19 @@
 			},
 
 			updatePosition: function() {
-				if (!this._target || !this.offsetParent) {
+				if (!this.customTarget && (!this._target || !this.offsetParent)) {
 					return;
 				}
 
 				var offset = this.offset;
-				var parentRect = this.offsetParent.tagName === 'BODY' ?
+				var parentRect = (this.customTarget || this.offsetParent.tagName === 'BODY') ?
 					{ left: 0, top: 0, right: 0, bottom: 0 } :
 					this.offsetParent.getBoundingClientRect();
-				var targetRect = this._target.getBoundingClientRect();
+				var targetRect = this.customTarget ? this.customTarget : this._target.getBoundingClientRect();
 				var thisRect = this.getBoundingClientRect();
 
 				var horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
 				var verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
-
 				var targetLeft = targetRect.left - parentRect.left;
 				var targetTop = targetRect.top - parentRect.top;
 
@@ -180,6 +200,11 @@
 
 				this.style.left = tooltipLeft + 'px';
 				this.style.top = tooltipTop + 'px';
+				if (this.tooltipPadding) {
+					this.$.tooltip.style.padding = this.tooltipPadding + 'px';
+				}
+				this.style['white-space'] = this.whitespace;
+
 				this.$.triangle.style.left = triangleLeft + 'px';
 				this.$.triangle.style.top = triangleTop + 'px';
 			},
@@ -192,8 +217,6 @@
 					this.listen(this._target, 'blur', 'hide');
 					this.listen(this._target, 'tap', 'hide');
 				}
-
-				this.listen(this, 'mouseenter', 'hide');
 			},
 
 			_getTriangleOrientation: function(position) {
@@ -223,8 +246,6 @@
 					this.unlisten(this._target, 'blur', 'hide');
 					this.unlisten(this._target, 'tap', 'hide');
 				}
-
-				this.unlisten(this, 'mouseenter', 'hide');
 			}
 		});
 	</script>
