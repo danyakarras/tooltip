@@ -79,11 +79,6 @@
 					value: 8
 				},
 
-				whitespace: {
-					type: String,
-					value: ''
-				},
-
 				_showing: {
 					type: Boolean,
 					value: false
@@ -203,7 +198,6 @@
 				if (this.tooltipPadding) {
 					this.$.tooltip.style.padding = this.tooltipPadding + 'px';
 				}
-				this.style['white-space'] = this.whitespace;
 
 				this.$.triangle.style.left = triangleLeft + 'px';
 				this.$.triangle.style.top = triangleTop + 'px';
