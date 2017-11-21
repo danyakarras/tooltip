@@ -25,7 +25,20 @@
 			}
 		</style>
 		<custom-style include="d2l-typography">
-			<style is="custom-style" include="d2l-typography"></style>
+			<style is="custom-style" include="d2l-typography">
+        .mixin-tooltip {
+          --tooltip-background-color: #ffffff;
+          --tooltip-border: 1px solid;
+          --tooltip-border-color:  #d3d9e3;
+
+          --tooltip-mixin: {
+            width: 200px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+            font-family: Lato;
+            color: #565a5c;
+          }
+        }
+      </style>
 		</custom-style>
     <script>
       /*
@@ -47,6 +60,11 @@
 		<br />
 		<span class="box" id="right">Hover me (right)</span>
 		<d2l-tooltip position="right" for="right">Right</d2l-tooltip>
+    <br />
+    <span class="box" id="mixin">Mixin Tooltip (right)</span>
+		<d2l-tooltip class="mixin-tooltip" position="right" for="mixin">
+      Use custom parameters to style the tooltip.
+    </d2l-tooltip>
 		</div>
 	</body>
 </html>
