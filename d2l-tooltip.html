@@ -24,11 +24,15 @@
 				font-size: 14px;
 				line-height: 1;
 
-				background-color: var(--d2l-color-ferrite);
+				background-color: var(--tooltip-background-color, var(--d2l-color-ferrite));
 				color: White;
 
 				padding: 8px;
 				border-radius: 5px;
+
+				border: var(--tooltip-border);
+				border-color: var(--tooltip-border-color);
+				@apply --tooltip-mixin;
 			}
 
 			.hidden {
@@ -37,11 +41,19 @@
 
 			#triangle {
 				position: absolute;
+				z-index: -1; /* This triangle handles the border, and is underneath the overlay */
+				--stroke-color: var(--tooltip-border-color);
+			}
+
+			#triangleOverlay {
+				position: absolute;
+				--fill-color: var(--tooltip-background-color);
 			}
 		</style>
 
 		<div id="tooltip" class="hidden">
 			<d2l-rounded-triangle id="triangle" orientation="[[ _getTriangleOrientation(position) ]]"></d2l-rounded-triangle>
+			<d2l-rounded-triangle id="triangleOverlay" orientation="[[ _getTriangleOrientation(position) ]]"></d2l-rounded-triangle>
 			<slot></slot>
 		</div>
 	</template>
@@ -201,6 +213,8 @@
 
 				this.$.triangle.style.left = triangleLeft + 'px';
 				this.$.triangle.style.top = triangleTop + 'px';
+				this.$.triangleOverlay.style.left = triangleLeft + 'px';
+				this.$.triangleOverlay.style.top = triangleTop + 'px';
 			},
 
 			_addListeners: function() {
