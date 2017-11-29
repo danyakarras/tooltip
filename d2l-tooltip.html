@@ -99,7 +99,12 @@
 				tooltipPadding: {
 					type: Number,
 					value: 0
-				}
+				},
+
+				tappedOn: {
+					type: Boolean,
+					value: false
+				},
 			},
 
 			get target() {
@@ -153,7 +158,7 @@
 			},
 
 			hide: function() {
-				if (this._showing) {
+				if (!this.tappedOn && this._showing) {
 					this._showing = false;
 					this.toggleClass('hidden', true, this.$.tooltip);
 				}
@@ -223,7 +228,16 @@
 					this.listen(this._target, 'focus', 'show');
 					this.listen(this._target, 'mouseleave', 'hide');
 					this.listen(this._target, 'blur', 'hide');
-					this.listen(this._target, 'tap', 'hide');
+					this.listen(this._target, 'tap', '_toggle');
+				}
+			},
+
+			_toggle: function() {
+				this.tappedOn = !this.tappedOn;
+				if (!this.tappedOn) {
+					this.hide();
+				} else {
+					this.show();
 				}
 			},
 
