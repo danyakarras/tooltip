@@ -206,8 +206,14 @@
 				this.playAnimation('entry');
 			},
 
-			hide: function() {
+			hide: function(event, noAnimation) {
 				if (this._tappedOn || !this._showing) {
+					return;
+				}
+
+				if (noAnimation) {
+					this._showing = false;
+					this._onAnimationFinish();
 					return;
 				}
 
@@ -314,7 +320,8 @@
 
 			_documentClickListener: function(e) {
 				if (e.target.id !== this._target.id) {
-					this._toggle();
+					this._tappedOn = false;
+					this.hide(undefined, true);
 				}
 			},
 
