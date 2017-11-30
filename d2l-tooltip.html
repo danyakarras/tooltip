@@ -206,8 +206,14 @@
 				this.playAnimation('entry');
 			},
 
-			hide: function() {
+			hide: function(event, noAnimation) {
 				if (this._tappedOn || !this._showing) {
+					return;
+				}
+
+				if (noAnimation) {
+					this._showing = false;
+					this._onAnimationFinish();
 					return;
 				}
 
@@ -281,11 +287,10 @@
 			},
 
 			get document() {
-				if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-					return this.parentNode.host;
+				if (this.ownerDocument.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+					return this.ownerDocument.host;
 				}
-
-				return this.parentNode;
+				return this.ownerDocument;
 			},
 
 			_addListeners: function() {
@@ -315,7 +320,8 @@
 
 			_documentClickListener: function(e) {
 				if (e.target.id !== this._target.id) {
-					this._toggle();
+					this._tappedOn = false;
+					this.hide(undefined, true);
 				}
 			},
 
