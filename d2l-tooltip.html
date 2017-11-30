@@ -280,6 +280,14 @@
 				this.$.triangleOverlay.style.top = triangleTop + 'px';
 			},
 
+			get document() {
+				if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+					return this.parentNode.host;
+				}
+
+				return this.parentNode;
+			},
+
 			_addListeners: function() {
 				if (this._target) {
 					this.listen(this._target, 'mouseenter', 'show');
@@ -298,8 +306,16 @@
 				this._tappedOn = !this._tappedOn;
 				if (!this._tappedOn) {
 					this.hide();
+					this.unlisten(this.document, 'tap', '_documentClickListener');
 				} else {
+					this.listen(this.document, 'tap', '_documentClickListener');
 					this.show();
+				}
+			},
+
+			_documentClickListener: function(e) {
+				if (e.target.id !== this._target.id) {
+					this._toggle();
 				}
 			},
 
