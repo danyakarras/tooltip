@@ -101,7 +101,12 @@
 					value: 0
 				},
 
-				tappedOn: {
+				tapToggle: {
+					type: Boolean,
+					value: false
+				},
+
+				_tappedOn: {
 					type: Boolean,
 					value: false
 				},
@@ -158,7 +163,7 @@
 			},
 
 			hide: function() {
-				if (!this.tappedOn && this._showing) {
+				if (!this._tappedOn && this._showing) {
 					this._showing = false;
 					this.toggleClass('hidden', true, this.$.tooltip);
 				}
@@ -233,8 +238,12 @@
 			},
 
 			_toggle: function() {
-				this.tappedOn = !this.tappedOn;
-				if (!this.tappedOn) {
+				if (!this.tapToggle) {
+					this.hide();
+					return;
+				}
+				this._tappedOn = !this._tappedOn;
+				if (!this._tappedOn) {
 					this.hide();
 				} else {
 					this.show();
@@ -257,6 +266,9 @@
 			_findTarget: function() {
 				this._removeListeners();
 				this._target = this.target;
+				if (this.tapToggle) {
+					this._target.style.cursor = "pointer";
+				}
 				this._addListeners();
 			},
 
