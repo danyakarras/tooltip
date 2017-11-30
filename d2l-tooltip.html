@@ -1,6 +1,9 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../d2l-colors/d2l-colors.html">
 <link rel="import" href="./d2l-rounded-triangle.html">
+<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
+<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
 
 <dom-module id="d2l-tooltip">
 	<template>
@@ -33,10 +36,13 @@
 				border: var(--tooltip-border);
 				border-color: var(--tooltip-border-color);
 				@apply --tooltip-mixin;
+				opacity: 1;
 			}
 
 			.hidden {
 				display: none !important;
+				transition: opacity 1s ease-out;
+				opacity: 0;
 			}
 
 			#triangle {
@@ -68,6 +74,10 @@
 				tabindex: -1
 			},
 
+			behaviors: [
+				Polymer.NeonAnimationRunnerBehavior
+			],
+
 			properties: {
 				for: {
 					type: String,
@@ -91,6 +101,28 @@
 					value: 8
 				},
 
+				animationDelay: {
+					type: Number,
+					value: 150
+				},
+
+				animationConfig: {
+					type: Object,
+					value: function() {
+						return {
+							'entry': [{
+								name: 'fade-in-animation',
+								node: this,
+								timing: {delay: 0}
+							}],
+							'exit': [{
+								name: 'fade-out-animation',
+								node: this
+							}]
+						};
+					}
+				},
+
 				_showing: {
 					type: Boolean,
 					value: false
@@ -99,7 +131,21 @@
 				tooltipPadding: {
 					type: Number,
 					value: 0
+				},
+
+				tapToggle: {
+					type: Boolean,
+					value: false
+				},
+
+				_tappedOn: {
+					type: Boolean,
+					value: false
 				}
+			},
+
+			listeners: {
+				'neon-animation-finish': '_onAnimationFinish'
 			},
 
 			get target() {
@@ -150,13 +196,27 @@
 				this._showing = true;
 				this.toggleClass('hidden', false, this.$.tooltip);
 				this.updatePosition();
+
+				this.animationConfig['entry'][0].timing = this.animationConfig['entry'][0].timing || {};
+				this.animationConfig['entry'][0].timing.delay = this.animationDelay;
+				this._animationPlaying = true;
+				this.playAnimation('entry');
 			},
 
 			hide: function() {
-				if (this._showing) {
-					this._showing = false;
-					this.toggleClass('hidden', true, this.$.tooltip);
+				if (this._tappedOn || !this._showing) {
+					return;
 				}
+
+				if (this._animationPlaying) {
+					this.cancelAnimation();
+					this._showing = false;
+					this._onAnimationFinish();
+					return;
+				}
+				this._showing = false;
+				this._animationPlaying = true;
+				this.playAnimation('exit');
 			},
 
 			updatePosition: function() {
@@ -223,7 +283,20 @@
 					this.listen(this._target, 'focus', 'show');
 					this.listen(this._target, 'mouseleave', 'hide');
 					this.listen(this._target, 'blur', 'hide');
-					this.listen(this._target, 'tap', 'hide');
+					this.listen(this._target, 'tap', '_toggle');
+				}
+			},
+
+			_toggle: function() {
+				if (!this.tapToggle) {
+					this.hide();
+					return;
+				}
+				this._tappedOn = !this._tappedOn;
+				if (!this._tappedOn) {
+					this.hide();
+				} else {
+					this.show();
 				}
 			},
 
@@ -243,6 +316,9 @@
 			_findTarget: function() {
 				this._removeListeners();
 				this._target = this.target;
+				if (this.tapToggle) {
+					this._target.style.cursor = 'pointer';
+				}
 				this._addListeners();
 			},
 
@@ -253,6 +329,13 @@
 					this.unlisten(this._target, 'mouseleave', 'hide');
 					this.unlisten(this._target, 'blur', 'hide');
 					this.unlisten(this._target, 'tap', 'hide');
+				}
+			},
+
+			_onAnimationFinish: function() {
+				this._animationPlaying = false;
+				if (!this._showing) {
+					this.toggleClass('hidden', true, this.$.tooltip);
 				}
 			}
 		});
