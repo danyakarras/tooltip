@@ -281,11 +281,10 @@
 			},
 
 			get document() {
-				if (this.parentNode.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
-					return this.parentNode.host;
+				if (this.ownerDocument.nodeType === Node.DOCUMENT_FRAGMENT_NODE) {
+					return this.ownerDocument.host;
 				}
-
-				return this.parentNode;
+				return this.ownerDocument;
 			},
 
 			_addListeners: function() {
