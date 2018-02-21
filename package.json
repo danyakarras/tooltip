@@ -1,7 +1,6 @@
 {
   "name": "@d2l/tooltip",
-  "version": "2.0.0",
-  "description": "Polymer tooltip",
+  "description": "Polymer-based web component for D2L tooltips.",
   "private": true,
   "scripts": {
     "lint": "eslint *.html",
@@ -18,7 +17,6 @@
   "author": "D2L",
   "license": "Apache-2.0",
   "devDependencies": {
-    "bower": "^1.7.7",
     "bower-art-resolver": "2.0.6",
     "eslint": "^4.15.0",
     "eslint-config-brightspace": "^0.4.0",
