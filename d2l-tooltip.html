@@ -14,33 +14,31 @@ Polymer-based web component for a D2L tooltip
 	<template strip-whitespace>
 		<style>
 			:host {
-				@apply --d2l-body-compact-text;
-				line-height: 1.4rem;
-				display: none;
-				outline: none;
-				color: var(--d2l-color-white);
-				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
-				box-sizing: border-box;
-
-				padding: 8px;
-				border-radius: 5px;
-
-				border: var(--d2l-tooltip-border, 1px solid);
-				border-color: var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
-				@apply --d2l-tooltip-mixin;
-
-				left: 0;
-				position: absolute;
-				text-align: left;
-				top: calc(100% + var(--d2l-tooltip-verticaloffset, 20px));
-				z-index: 1000; /* position on top of floating buttons */
-				outline: none;
 				-moz-user-select: none;
 				-ms-user-select: none;
 				-webkit-user-select: none;
-				user-select: none;
+
+				@apply --d2l-body-compact-text;
+				@apply --d2l-tooltip-mixin;
+
+				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
+				border: var(--d2l-tooltip-border, 1px solid);
+				border-color: var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
+				border-radius: 5px;
+				box-sizing: border-box;
+				color: var(--d2l-color-white);
 				cursor: default;
+				display: none;
+				left: 0;
+				line-height: 1.4rem;
+				outline: none;
+				padding: 8px;
 				pointer-events: none;
+				position: absolute;
+				text-align: left;
+				top: calc(100% + var(--d2l-tooltip-verticaloffset, 20px));
+				user-select: none;
+				z-index: 1000; /* position on top of floating buttons */
 			}
 
 			:host([showing]) {
@@ -68,29 +66,30 @@ Polymer-based web component for a D2L tooltip
 			}
 
 			:host .d2l-tooltip-triangle {
-				position: absolute;
-				display: inline-block;
 				clip: rect(-5px, 21px, 8px, -3px);
-				top: -7px;
+				display: inline-block;
 				left: calc(50% - 8px);
+				position: absolute;
+				top: -7px;
 				z-index: 1;
 			}
 
 			:host .d2l-tooltip-triangle > div {
+				-webkit-transform: rotate(45deg);
+
 				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
 				border: 1px solid var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
 				border-radius: 0.1rem;
 				box-shadow: -4px -4px 12px -5px rgba(86, 90, 92, .2);
 				height: 16px;
-				width: 16px;
 				transform: rotate(45deg);
-				-webkit-transform: rotate(45deg);
+				width: 16px;
 			}
 
 			:host([position="top"]) .d2l-tooltip-triangle {
-				top: auto;
-				clip: rect(9px, 21px, 22px, -3px);
 				bottom: -8px;
+				clip: rect(9px, 21px, 22px, -3px);
+				top: auto;
 			}
 
 			:host([position="top"]) .d2l-tooltip-triangle > div {
@@ -102,10 +101,10 @@ Polymer-based web component for a D2L tooltip
 			}
 
 			:host([position="left"]) .d2l-tooltip-triangle {
-				top: calc(50% - 9px);
 				clip: rect(-3px, 22px, 21px, 8px);
-				right: -8px;
 				left: auto;
+				right: -8px;
+				top: calc(50% - 9px);
 			}
 
 			:host([position="left"]) .d2l-tooltip-triangle > div {
@@ -113,10 +112,10 @@ Polymer-based web component for a D2L tooltip
 			}
 
 			:host([position="right"]) .d2l-tooltip-triangle {
-				top: calc(50% - 9px);
 				clip: rect(-3px, 8px, 22px, -4px);
-				right: auto;
 				left: -8px;
+				right: auto;
+				top: calc(50% - 9px);
 			}
 
 			:host([position="right"]) .d2l-tooltip-triangle > div {
