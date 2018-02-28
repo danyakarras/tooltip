@@ -270,11 +270,11 @@ Polymer-based web component for a D2L tooltip
 					return;
 				}
 
-				if (Polymer.dom(this).textContent.trim() === '') {
+				if (Polymer.dom(this).textContent.trim() && this.innerText.trim() === '') {
 					var allChildrenEmpty = true;
 					var effectiveChildren = Polymer.dom(this).getEffectiveChildNodes();
 					for (var i = 0; i < effectiveChildren.length; i++) {
-						if (effectiveChildren[i].textContent.trim() !== '') {
+						if (effectiveChildren[i].textContent.trim() !== '' || (effectiveChildren[i].innerText && effectiveChildren[i].innerText.trim() !== '')) {
 							allChildrenEmpty = false;
 							break;
 						}
