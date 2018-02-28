@@ -18,15 +18,15 @@ Polymer-based web component for a D2L tooltip
 				font-size: 14px;
 				line-height: 1;
 				color: var(--d2l-color-white);
-				background-color: var(--tooltip-background-color, var(--d2l-color-ferrite));
+				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
 				box-sizing: border-box;
 
 				padding: 8px;
 				border-radius: 5px;
 
-				border: var(--tooltip-border, 1px solid);
-				border-color: var(--tooltip-border-color, var(--d2l-color-ferrite));
-				@apply --tooltip-mixin;
+				border: var(--d2l-tooltip-border, 1px solid);
+				border-color: var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
+				@apply --d2l-tooltip-mixin;
 
 				left: 0;
 				position: absolute;
@@ -76,8 +76,8 @@ Polymer-based web component for a D2L tooltip
 			}
 
 			:host .d2l-tooltip-triangle > div {
-				background-color: var(--tooltip-background-color, var(--d2l-color-ferrite));
-				border: 1px solid var(--tooltip-border-color, var(--d2l-color-ferrite));
+				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
+				border: 1px solid var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
 				border-radius: 0.1rem;
 				box-shadow: -4px -4px 12px -5px rgba(86, 90, 92, .2);
 				height: 16px;

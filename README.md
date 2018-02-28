@@ -23,11 +23,11 @@ Include the [webcomponents.js](http://webcomponents.org/polyfills/) "lite" polyf
     <custom-style include="d2l-typography">
       <style is="custom-style" include="d2l-typography">
 				.mixin-tooltip {
-          --tooltip-background-color: #ffffff;
-          --tooltip-border: 1px solid;
-          --tooltip-border-color:  #d3d9e3;
+          --d2l-tooltip-background-color: #ffffff;
+          --d2l-tooltip-border: 1px solid;
+          --d2l-tooltip-border-color:  #d3d9e3;
 
-          --tooltip-mixin: {
+          --d2l-tooltip-mixin: {
             width: 200px;
             box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
             font-family: Lato;
@@ -64,11 +64,11 @@ Include the [webcomponents.js](http://webcomponents.org/polyfills/) "lite" polyf
 Custom CSS properties for styling:
 
 - All three properties should be set to style the box correctly:
-  - `--tooltip-background-color` - the color of the tooltip box
-  - `--tooltip-border` - (e.g., `1px solid;`)
-  - `--tooltip-border-color` - border color
-- `--tooltip-mixin` - styles on the content within the tooltip
+  - `--d2l-tooltip-background-color` - the color of the tooltip box
+  - `--d2l-tooltip-border` - (e.g., `1px solid;`)
+  - `--d2l-tooltip-border-color` - border color
+- `--d2l-tooltip-mixin` - styles on the content within the tooltip
 
 ## Demo
 
-To run the demo run `npm install`, `npm start` and visit http://localhost:9998/components/d2l-tooltip/demo/
+To run the demo run `npm install`, `polymer serve`.
