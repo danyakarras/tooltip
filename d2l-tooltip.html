@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../d2l-colors/d2l-colors.html">
+<link rel="import" href="../d2l-typography/d2l-typography-shared-styles.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 
 <!--
@@ -13,10 +14,10 @@ Polymer-based web component for a D2L tooltip
 	<template strip-whitespace>
 		<style>
 			:host {
+				@apply --d2l-body-compact-text;
+				line-height: 1.4rem;
 				display: none;
 				outline: none;
-				font-size: 14px;
-				line-height: 1;
 				color: var(--d2l-color-white);
 				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
 				box-sizing: border-box;
