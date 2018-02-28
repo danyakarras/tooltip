@@ -5,7 +5,6 @@
   "scripts": {
     "lint": "eslint *.html",
     "postinstall": "polymer install --variants",
-    "start": "polymer serve -p 9998",
     "test": "npm run test:lint:js && npm run test:lint:wc",
     "test:lint:js": "eslint *.html",
     "test:lint:wc": "polymer lint"
