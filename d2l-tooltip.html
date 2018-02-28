@@ -1,10 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../d2l-colors/d2l-colors.html">
-<link rel="import" href="./d2l-rounded-triangle.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
-<link rel="import" href="../neon-animation/neon-animation-runner-behavior.html">
-<link rel="import" href="../neon-animation/animations/fade-in-animation.html">
-<link rel="import" href="../neon-animation/animations/fade-out-animation.html">
 
 <!--
 `d2l-tooltip`
@@ -17,10 +13,27 @@ Polymer-based web component for a D2L tooltip
 	<template strip-whitespace>
 		<style>
 			:host {
-				display: block;
-				position: absolute;
+				display: none;
 				outline: none;
-				z-index: 1002;
+				font-size: 14px;
+				line-height: 1;
+				color: var(--d2l-color-white);
+				background-color: var(--tooltip-background-color, var(--d2l-color-ferrite));
+				box-sizing: border-box;
+
+				padding: 8px;
+				border-radius: 5px;
+
+				border: var(--tooltip-border, 1px solid);
+				border-color: var(--tooltip-border-color, var(--d2l-color-ferrite));
+				@apply --tooltip-mixin;
+
+				left: 0;
+				position: absolute;
+				text-align: left;
+				top: calc(100% + var(--d2l-tooltip-verticaloffset, 20px));
+				z-index: 1000; /* position on top of floating buttons */
+				outline: none;
 				-moz-user-select: none;
 				-ms-user-select: none;
 				-webkit-user-select: none;
@@ -29,45 +42,136 @@ Polymer-based web component for a D2L tooltip
 				pointer-events: none;
 			}
 
-			#tooltip {
-				display: block;
-				outline: none;
-				font-size: 14px;
-				line-height: 1;
+			:host([showing]) {
+				display: inline-block;
+			}
 
+			:host([showing]) {
+				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
+				animation: d2l-tooltip-bottom-animation 200ms ease;
+			}
+
+			:host([position="top"]) {
+				-webkit-animation: d2l-tooltip-top-animation 200ms ease;
+				animation: d2l-tooltip-top-animation 200ms ease;
+			}
+
+			:host([position="left"]) {
+				-webkit-animation: d2l-tooltip-left-animation 200ms ease;
+				animation: d2l-tooltip-left-animation 200ms ease;
+			}
+
+			:host([position="right"]) {
+				-webkit-animation: d2l-tooltip-right-animation 200ms ease;
+				animation: d2l-tooltip-right-animation 200ms ease;
+			}
+
+			:host .d2l-tooltip-triangle {
+				position: absolute;
+				display: inline-block;
+				clip: rect(-5px, 21px, 8px, -3px);
+				top: -7px;
+				left: calc(50% - 8px);
+				z-index: 1;
+			}
+
+			:host .d2l-tooltip-triangle > div {
 				background-color: var(--tooltip-background-color, var(--d2l-color-ferrite));
-				color: White;
-
-				padding: 8px;
-				border-radius: 5px;
-
-				border: var(--tooltip-border);
-				border-color: var(--tooltip-border-color);
-				@apply --tooltip-mixin;
-				opacity: 1;
+				border: 1px solid var(--tooltip-border-color, var(--d2l-color-ferrite));
+				border-radius: 0.1rem;
+				box-shadow: -4px -4px 12px -5px rgba(86, 90, 92, .2);
+				height: 16px;
+				width: 16px;
+				transform: rotate(45deg);
+				-webkit-transform: rotate(45deg);
 			}
 
-			.hidden {
-				display: none !important;
-				transition: opacity 1s ease-out;
-				opacity: 0;
+			:host([position="top"]) .d2l-tooltip-triangle {
+				top: auto;
+				clip: rect(9px, 21px, 22px, -3px);
+				bottom: -8px;
 			}
 
-			#triangle {
-				position: absolute;
-				z-index: -1; /* This triangle handles the border, and is underneath the overlay */
-				--stroke-color: var(--tooltip-border-color);
+			:host([position="top"]) .d2l-tooltip-triangle > div {
+				box-shadow: 4px 4px 12px -5px rgba(86, 90, 92, .2);
 			}
 
-			#triangleOverlay {
-				position: absolute;
-				--fill-color: var(--tooltip-background-color);
+			:host([position="left"]) {
+				top: calc(50% + 10px);
 			}
+
+			:host([position="left"]) .d2l-tooltip-triangle {
+				top: calc(50% - 9px);
+				clip: rect(-3px, 22px, 21px, 8px);
+				right: -8px;
+				left: auto;
+			}
+
+			:host([position="left"]) .d2l-tooltip-triangle > div {
+				box-shadow: 4px 4px 12px -5px rgba(86, 90, 92, .2);
+			}
+
+			:host([position="right"]) .d2l-tooltip-triangle {
+				top: calc(50% - 9px);
+				clip: rect(-3px, 8px, 22px, -4px);
+				right: auto;
+				left: -8px;
+			}
+
+			:host([position="right"]) .d2l-tooltip-triangle > div {
+				box-shadow: 4px 4px 12px -5px rgba(86, 90, 92, .2);
+			}
+
+			:host-context([dir="rtl"]) {
+				left: auto;
+				right: 0;
+				text-align: right;
+			}
+			:host(:dir(rtl)) {
+				left: auto;
+				right: 0;
+				text-align: right;
+			}
+
+			@keyframes d2l-tooltip-top-animation {
+				0% { transform: translate(0,-10px); opacity: 0; }
+				100% { transform: translate(0,0); opacity: 1; }
+			}
+			@keyframes d2l-tooltip-bottom-animation {
+				0% { transform: translate(0,10px); opacity: 0; }
+				100% { transform: translate(0,0); opacity: 1; }
+			}
+			@keyframes d2l-tooltip-left-animation {
+				0% { transform: translate(-10px,0); opacity: 0; }
+				100% { transform: translate(0,0); opacity: 1; }
+			}
+			@keyframes d2l-tooltip-right-animation {
+				0% { transform: translate(10px,0); opacity: 0; }
+				100% { transform: translate(0,0); opacity: 1; }
+			}
+			@-webkit-keyframes d2l-tooltip-top-animation {
+				0% { -webkit-transform: translate(0,-10px); opacity: 0; }
+				100% { -webkit-transform: translate(0,0); opacity: 1; }
+			}
+			@-webkit-keyframes d2l-tooltip-bottom-animation {
+				0% { -webkit-transform: translate(0,10px); opacity: 0; }
+				100% { -webkit-transform: translate(0,0); opacity: 1; }
+			}
+			@-webkit-keyframes d2l-tooltip-bottom-animation {
+				0% { -webkit-transform: translate(0,10px); opacity: 0; }
+				100% { -webkit-transform: translate(0,0); opacity: 1; }
+			}
+			@-webkit-keyframes d2l-tooltip-bottom-animation {
+				0% { -webkit-transform: translate(0,10px); opacity: 0; }
+				100% { -webkit-transform: translate(0,0); opacity: 1; }
+			}
+
 		</style>
 
-		<div id="tooltip" class="hidden">
-			<d2l-rounded-triangle id="triangle" orientation="[[ _getTriangleOrientation(position) ]]"></d2l-rounded-triangle>
-			<d2l-rounded-triangle id="triangleOverlay" orientation="[[ _getTriangleOrientation(position) ]]"></d2l-rounded-triangle>
+		<div id="tooltip">
+			<div class="d2l-tooltip-triangle">
+				<div></div>
+			</div>
 			<slot></slot>
 		</div>
 	</template>
@@ -83,7 +187,6 @@ Polymer-based web component for a D2L tooltip
 			},
 
 			behaviors: [
-				Polymer.NeonAnimationRunnerBehavior,
 				Polymer.IronResizableBehavior
 			],
 
@@ -110,31 +213,10 @@ Polymer-based web component for a D2L tooltip
 					value: 8
 				},
 
-				animationDelay: {
-					type: Number,
-					value: 150
-				},
-
-				animationConfig: {
-					type: Object,
-					value: function() {
-						return {
-							'entry': [{
-								name: 'fade-in-animation',
-								node: this,
-								timing: {delay: 0}
-							}],
-							'exit': [{
-								name: 'fade-out-animation',
-								node: this
-							}]
-						};
-					}
-				},
-
-				_showing: {
+				showing: {
 					type: Boolean,
-					value: false
+					value: false,
+					reflectToAttribute: true
 				},
 
 				tooltipPadding: {
@@ -154,7 +236,6 @@ Polymer-based web component for a D2L tooltip
 			},
 
 			listeners: {
-				'neon-animation-finish': '_onAnimationFinish',
 				'iron-resize': '_onIronResize'
 			},
 
@@ -184,7 +265,7 @@ Polymer-based web component for a D2L tooltip
 			},
 
 			show: function() {
-				if (this._showing) {
+				if (this.showing) {
 					return;
 				}
 
@@ -203,36 +284,16 @@ Polymer-based web component for a D2L tooltip
 					}
 				}
 
-				this._showing = true;
-				this.toggleClass('hidden', false, this.$.tooltip);
+				this.showing = true;
 				this.updatePosition();
-
-				this.animationConfig['entry'][0].timing = this.animationConfig['entry'][0].timing || {};
-				this.animationConfig['entry'][0].timing.delay = this.animationDelay;
-				this._animationPlaying = true;
-				this.playAnimation('entry');
 			},
 
-			hide: function(event, noAnimation) {
-				if (this._tappedOn || !this._showing) {
+			hide: function() {
+				if (this._tappedOn || !this.showing) {
 					return;
 				}
 
-				if (noAnimation) {
-					this._showing = false;
-					this._onAnimationFinish();
-					return;
-				}
-
-				if (this._animationPlaying) {
-					this.cancelAnimation();
-					this._showing = false;
-					this._onAnimationFinish();
-					return;
-				}
-				this._showing = false;
-				this._animationPlaying = true;
-				this.playAnimation('exit');
+				this.showing = false;
 			},
 
 			updatePosition: function() {
@@ -247,37 +308,31 @@ Polymer-based web component for a D2L tooltip
 				var targetRect = this.customTarget ? this.customTarget : this._target.getBoundingClientRect();
 				var thisRect = this.getBoundingClientRect();
 
+				var xScroll = window.pageXOffset;
+				var yScroll = window.pageYOffset;
+
 				var horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
 				var verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
 				var targetLeft = targetRect.left - parentRect.left;
 				var targetTop = targetRect.top - parentRect.top;
 
-				var triangleOffset = -15;
-				var tooltipLeft, tooltipTop, triangleLeft, triangleTop;
+				var tooltipLeft, tooltipTop;
 				switch (this.position) {
 					case 'top':
-						tooltipLeft = targetLeft + horizontalCenterOffset;
-						tooltipTop = targetTop - thisRect.height - offset;
-						triangleLeft = (thisRect.width / 2) + (triangleOffset + 2);
-						triangleTop = thisRect.height + (triangleOffset + 6);
+						tooltipLeft = targetLeft + horizontalCenterOffset + xScroll;
+						tooltipTop = targetTop - thisRect.height - offset + yScroll;
 						break;
 					case 'bottom':
-						tooltipLeft = targetLeft + horizontalCenterOffset;
-						tooltipTop = targetTop + targetRect.height + offset;
-						triangleLeft = (thisRect.width / 2) + (triangleOffset + 2);
-						triangleTop = triangleOffset;
+						tooltipLeft = targetLeft + horizontalCenterOffset + xScroll;
+						tooltipTop = targetTop + targetRect.height + offset + yScroll;
 						break;
 					case 'left':
-						tooltipLeft = targetLeft - thisRect.width - offset;
-						tooltipTop = targetTop + verticalCenterOffset;
-						triangleLeft = thisRect.width + (triangleOffset + 6);
-						triangleTop = (thisRect.height / 2) + (triangleOffset + 3);
+						tooltipLeft = targetLeft - thisRect.width - offset + xScroll;
+						tooltipTop = targetTop + verticalCenterOffset + yScroll;
 						break;
 					case 'right':
-						tooltipLeft = targetLeft + targetRect.width + offset;
-						tooltipTop = targetTop + verticalCenterOffset;
-						triangleLeft = triangleOffset;
-						triangleTop = (thisRect.height / 2) + (triangleOffset + 3);
+						tooltipLeft = targetLeft + targetRect.width + offset + xScroll;
+						tooltipTop = targetTop + verticalCenterOffset + yScroll;
 						break;
 				}
 
@@ -286,11 +341,6 @@ Polymer-based web component for a D2L tooltip
 				if (this.tooltipPadding) {
 					this.$.tooltip.style.padding = this.tooltipPadding + 'px';
 				}
-
-				this.$.triangle.style.left = triangleLeft + 'px';
-				this.$.triangle.style.top = triangleTop + 'px';
-				this.$.triangleOverlay.style.left = triangleLeft + 'px';
-				this.$.triangleOverlay.style.top = triangleTop + 'px';
 			},
 
 			get document() {
@@ -332,19 +382,6 @@ Polymer-based web component for a D2L tooltip
 				}
 			},
 
-			_getTriangleOrientation: function(position) {
-				switch (position) {
-					case 'top':
-						return 'down';
-					case 'bottom':
-						return 'up';
-					case 'left':
-						return 'right';
-					case 'right':
-						return 'left';
-				}
-			},
-
 			_findTarget: function() {
 				this._removeListeners();
 				this._target = this.target;
@@ -361,13 +398,6 @@ Polymer-based web component for a D2L tooltip
 					this.unlisten(this._target, 'mouseleave', 'hide');
 					this.unlisten(this._target, 'blur', 'hide');
 					this.unlisten(this._target, 'tap', 'hide');
-				}
-			},
-
-			_onAnimationFinish: function() {
-				this._animationPlaying = false;
-				if (!this._showing) {
-					this.toggleClass('hidden', true, this.$.tooltip);
 				}
 			},
 
