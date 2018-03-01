@@ -22,7 +22,7 @@ Include the [webcomponents.js](http://webcomponents.org/polyfills/) "lite" polyf
     <link rel="import" href="d2l-tooltip.html">
     <custom-style include="d2l-typography">
       <style is="custom-style" include="d2l-typography">
-				.mixin-tooltip {
+		.mixin-tooltip {
           --d2l-tooltip-background-color: #ffffff;
           --d2l-tooltip-border: 1px solid;
           --d2l-tooltip-border-color:  #d3d9e3;
