@@ -270,7 +270,11 @@ Polymer-based web component for a D2L tooltip
 					return;
 				}
 
-				if (Polymer.dom(this).textContent.trim() && this.innerText.trim() === '') {
+				/* There seems to be an issue in Polymer v2, within Chrome, while using the wc-shadydom=true flag
+				   which results in the textContent property not containing the element text. Instead the only
+				   place it can be found is on this.innerText. */
+				if (Polymer.dom(this).textContent.trim() === ''
+				&& (this.innerText && this.innerText.trim() === '')) {
 					var allChildrenEmpty = true;
 					var effectiveChildren = Polymer.dom(this).getEffectiveChildNodes();
 					for (var i = 0; i < effectiveChildren.length; i++) {
