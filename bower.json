@@ -8,9 +8,10 @@
     ".editorconfig",
     ".eslintrc",
     ".gitignore",
-    "circle.yml",
+    ".travis.yml",
     "package.json",
-    "polymer.json"
+    "polymer.json",
+    "wct.conf.json"
   ],
   "dependencies": {
     "d2l-colors": "^3.1.0",
@@ -30,5 +31,9 @@
   },
   "resolutions": {
     "webcomponentsjs": "^v1.0.0"
+  },
+  "devDependencies": {
+    "iron-test-helpers": "^2.0.0",
+    "web-component-tester": "^6.5.0"
   }
 }
