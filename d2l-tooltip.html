@@ -81,7 +81,6 @@ Polymer-based web component for a D2L tooltip
 				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
 				border: var(--d2l-tooltip-border, 1px solid) var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
 				border-radius: 0.1rem;
-				box-shadow: -4px -4px 12px -5px rgba(86, 90, 92, .2);
 				height: 16px;
 				transform: rotate(45deg);
 				width: 16px;
@@ -91,10 +90,6 @@ Polymer-based web component for a D2L tooltip
 				bottom: -8px;
 				clip: rect(9px, 21px, 22px, -3px);
 				top: auto;
-			}
-
-			:host([position="top"]) .d2l-tooltip-triangle > div {
-				box-shadow: 4px 4px 12px -5px rgba(86, 90, 92, .2);
 			}
 
 			:host([position="left"]) {
@@ -108,19 +103,11 @@ Polymer-based web component for a D2L tooltip
 				top: calc(50% - 9px);
 			}
 
-			:host([position="left"]) .d2l-tooltip-triangle > div {
-				box-shadow: 4px 4px 12px -5px rgba(86, 90, 92, .2);
-			}
-
 			:host([position="right"]) .d2l-tooltip-triangle {
 				clip: rect(-3px, 8px, 22px, -4px);
 				left: -8px;
 				right: auto;
 				top: calc(50% - 9px);
-			}
-
-			:host([position="right"]) .d2l-tooltip-triangle > div {
-				box-shadow: 4px 4px 12px -5px rgba(86, 90, 92, .2);
 			}
 
 			:host-context([dir="rtl"]) {
