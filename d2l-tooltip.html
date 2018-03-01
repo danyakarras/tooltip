@@ -19,7 +19,6 @@ Polymer-based web component for a D2L tooltip
 				-webkit-user-select: none;
 
 				@apply --d2l-body-compact-text;
-				@apply --d2l-tooltip-mixin;
 
 				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
 				border: var(--d2l-tooltip-border, 1px solid);
@@ -39,6 +38,8 @@ Polymer-based web component for a D2L tooltip
 				top: calc(100% + var(--d2l-tooltip-verticaloffset, 20px));
 				user-select: none;
 				z-index: 1000; /* position on top of floating buttons */
+
+				@apply --d2l-tooltip-mixin; /* needs to be down here to override any of the properties above */
 			}
 
 			:host([showing]) {
@@ -78,7 +79,7 @@ Polymer-based web component for a D2L tooltip
 				-webkit-transform: rotate(45deg);
 
 				background-color: var(--d2l-tooltip-background-color, var(--d2l-color-ferrite));
-				border: 1px solid var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
+				border: var(--d2l-tooltip-border, 1px solid) var(--d2l-tooltip-border-color, var(--d2l-color-ferrite));
 				border-radius: 0.1rem;
 				box-shadow: -4px -4px 12px -5px rgba(86, 90, 92, .2);
 				height: 16px;
