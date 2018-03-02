@@ -350,6 +350,7 @@ Polymer-based web component for a D2L tooltip
 					this.listen(this._target, 'mouseleave', 'hide');
 					this.listen(this._target, 'blur', 'hide');
 					this.listen(this._target, 'tap', '_toggle');
+					this.listen(this._target, 'keydown', '_onKeydown');
 				}
 			},
 
@@ -390,12 +391,20 @@ Polymer-based web component for a D2L tooltip
 					this.unlisten(this._target, 'focus', 'show');
 					this.unlisten(this._target, 'mouseleave', 'hide');
 					this.unlisten(this._target, 'blur', 'hide');
-					this.unlisten(this._target, 'tap', 'hide');
+					this.unlisten(this._target, 'tap', '_toggle');
+					this.unlisten(this._target, 'keydown', '_onKeydown');
 				}
 			},
 
 			_onIronResize: function() {
 				this.updatePosition();
+			},
+
+			_onKeydown: function(e) {
+				if (e.keyCode === 27) {
+					this._tappedOn = false;
+					this.showing = false;
+				}
 			}
 		});
 	</script>
