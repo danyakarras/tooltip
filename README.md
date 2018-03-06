@@ -72,3 +72,19 @@ Custom CSS properties for styling:
 ## Demo
 
 To run the demo run `npm install`, `polymer serve`.
+
+### Galen
+
+The [Galen][Galen] tests check layout and look of the tooltip. The results of the tests can be found in *reports/d2l-tooltip/report.html*
+
+To update the screenshots, run `npm run dump`. The screenshots will be placed under *dumps/d2l-tooltip/objects*
+
+* run the tests with `npm run test:galen:local`
+* [galen.config](galen.config) can be used to change the browser that is being tested. See the [config documentation][GalenConfig]
+* [tooltip.gspec](tooltip.gspec) contains the actual assertions. Documentation can be found [here][GalenSpec]
+
+**Note for Windows users:** If you experience an error executing chromedriver (`CreateProcess error=193, %1 is not a valid Win32 application`) you can work around this by deleting the file `node_modules/.bin/chromedriver`. Once removed, Galen will then use the `chromedriver.cmd` file which should work correctly.
+
+[Galen]: http://galenframework.com/
+[GalenConfig]: http://galenframework.com/docs/getting-started-configuration/
+[GalenSpec]: http://galenframework.com/docs/reference-galen-spec-language-guide/

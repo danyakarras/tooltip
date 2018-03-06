@@ -3,11 +3,22 @@
   "description": "Polymer-based web component for D2L tooltips.",
   "private": true,
   "scripts": {
+    "clean": "rimraf test/acceptance/dumps/* reports/",
+    "predump": "npm run -s clean",
+    "dump": "npm run -s dump:galen:local",
+    "galen": "d2l-galen -s -c \"java -Xmx2g -cp node_modules/galenframework/lib/galen/galen.jar com.galenframework.GalenMain\"",
     "postinstall": "polymer install --variants",
-    "test": "npm run test:lint && cross-env LAUNCHPAD_BROWSERS=chrome polymer test --skip-plugin sauce",
+    "test": "npm run test:lint && npm run test:unit && npm run test:galen:local",
     "test:lint": "npm run test:lint:js && npm run test:lint:wc",
     "test:lint:js": "eslint *.html",
-    "test:lint:wc": "polymer lint"
+    "test:lint:wc": "polymer lint",
+    "test:unit": "cross-env LAUNCHPAD_BROWSERS=chrome polymer test --skip-plugin sauce",
+    "dump:galen:local:run": "npm run galen -- dump tooltip.test.js -g factory:local -d test/acceptance/dumps",
+    "galen:local:run": "npm run galen -- test tooltip.test.js -g factory:local -- -p4",
+    "galen:sauce:run": "sc-run -- npm run galen -- test tooltip.test.js -g factory:sauce -i SAUCE_USERNAME SAUCE_ACCESS_KEY TRAVIS_REPO_SLUG TRAVIS_BUILD_NUMBER -- -p4",
+    "dump:galen:local": "concurrently -p name -n serve,galen -s first -k \"polymer serve -p 8080\" \"npm run dump:galen:local:run\"",
+    "test:galen:local": "concurrently -p name -n serve,galen -s first -k \"polymer serve -p 8080\" \"npm run galen:local:run\"",
+    "test:galen:sauce": "concurrently -p name -n serve,galen -s first -k \"polymer serve -p 8080\" \"npm run galen:sauce:run\""
   },
   "repository": {
     "type": "git",
@@ -16,10 +27,17 @@
   "author": "D2L",
   "license": "Apache-2.0",
   "devDependencies": {
+    "chromedriver": "^2.35.0",
+    "concurrently": "^3.5.1",
     "cross-env": "^5.1.3",
+    "d2l-galen-utils": "github:Brightspace/d2l-galen-utils",
     "eslint": "^4.15.0",
     "eslint-config-brightspace": "^0.4.0",
     "eslint-plugin-html": "^4.0.1",
-    "polymer-cli": "^1.5.7"
+    "galenframework": "^2.3.6",
+    "polymer-cli": "^1.5.7",
+    "rimraf": "^2.6.2",
+    "sauce-connect-launcher": "^1.2.3",
+    "sauceconnect-runner": "github:Brightspace/sauceconnect-runner"
   }
 }
