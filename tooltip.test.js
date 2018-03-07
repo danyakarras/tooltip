@@ -9,18 +9,6 @@ var browsers = {
 		platform: 'WIN10',
 		size: '1400x900'
 	}),
-	ie11Windows: new SauceBrowserFactory({
-		browser: 'internet explorer',
-		version: '11',
-		platform: 'WIN10',
-		size: '1400x900'
-	}),
-	edgeWindows: new SauceBrowserFactory({
-		browser: 'microsoftedge',
-		platform: 'WIN10',
-		size: '1400x900',
-		tags: ['no-d2l-shadow']
-	}),
 	chromeMac: new SauceBrowserFactory({
 		browser: 'Chrome',
 		platform: 'SIERRA',
@@ -30,11 +18,10 @@ var browsers = {
 			chromedriverVersion: '2.24'
 		}
 	}),
-	safariMac: new SauceBrowserFactory({
-		browser: 'Safari',
-		platform: 'EL_CAPITAN',
-		size: '1400x900',
-		tags: ['no-d2l-shadow']
+	firefoxWindows: new SauceBrowserFactory({
+		browser: 'firefox',
+		platform: 'WIN10',
+		size: '1400x900'
 	})
 };
 
