@@ -1,6 +1,9 @@
 language: node_js
 node_js: node
 addons:
+  apt:
+    packages:
+    - oracle-java8-installer
   artifacts:
     key:
       secure: PHeRyMpxCaZnDu65fC2ilrgr8X5YINKogKjck0/dTm2T/B1KPnGJP8+CV9RCdAOvT0iaJ9IymcPFgIU8+WIbLNGwziQK7xG+bKTchbWZOtjEDlHrCqyaQPgBQ2r8/uhZuhT6MXRQinK5ARj6Pw2xj5qh0HdAut0J4U5qjoMhhx/apQZyvIeVOraUqbFPqDAqXSfcx5nhyjNd3JLX3UK58idWjpHVPdAU9yYBO5f5cgPvTUvfFOSKPp8ZdlmDS0rbM7Dr3mK8ba4whL9AMeXdkOEV20T8yRA4cs66IUgCmLMb9c7KSjyLcQZbgkHIjCHPdd9G8Pi/MAqApAIn8GaH5m+S0XDOPN3JZjvyusDt0loagPYjABHufPcJSsERZ3C9xQpxdpjPDM8/Bnls26WKxJHn8wCVzAaVTKvKX9THwQEjw15R68pplCq8IfgYhwUNro3ZfDz032GrBa0MH3osuyCxa8y7nSDmGgXk6wcXten7tTKVjVibGATLSk5l7vFRwyhVB2Q2sLbpKmVV/pI5mqss6r+LgwlHI00TD3nO0DHnCE1lfDLe0OKUNnVi2oiy1+1aR4NN02mW1CKR2/QMA4lIw/5IQhJGBfDFwPBrljy7zcYZ+XyxW+m/27pOzl/JuaRzoMZSH5s6zfahbwxX1zgKkJA9SvpREUq9zQgnYUE=
@@ -9,9 +12,12 @@ addons:
     bucket: sequence-viewer-artifacts
     paths:
     - reports
+before_install:
+- export JAVA_HOME=/usr/lib/jvm/java-8-oracle
+- export PATH=$JAVA_HOME/bin:$PATH
 script:
 - npm run test:lint
-- 'if [ "$TRAVIS_SECURE_ENV_VARS" = "true" ]; then polymer test --skip-plugin local && npm run test:galen:sauce; fi'
+- 'if [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then polymer test --skip-plugin local && npm run test:galen:sauce; fi'
 - 'if [ "$TRAVIS_SECURE_ENV_VARS" = "false" ]; then polymer test --skip-plugin sauce; fi'
 env:
   global:

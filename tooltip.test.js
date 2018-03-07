@@ -116,6 +116,7 @@ polymerTests(browsers, function(test, ctx) {
 						}, function(opts, cb) {
 							var indexPage = new TooltipPage(opts.driver);
 							indexPage.elem.hover();
+							indexPage.elem.waitToBeShown('1s');
 							cb();
 						});
 					});
@@ -127,6 +128,7 @@ polymerTests(browsers, function(test, ctx) {
 					}, function(opts, cb) {
 						var indexPage = new TooltipPage(opts.driver);
 						indexPage.elem.click();
+						indexPage.elem.waitToBeShown('1s');
 						cb();
 					});
 
@@ -137,6 +139,7 @@ polymerTests(browsers, function(test, ctx) {
 					}, function(opts, cb) {
 						var indexPage = new TooltipPage(opts.driver);
 						indexPage.elem.click();
+						indexPage.elem.waitToBeShown('1s');
 						cb();
 					});
 				});
