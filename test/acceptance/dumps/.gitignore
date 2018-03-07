@@ -1,0 +1,5 @@
+*.css
+*.js
+page.*
+*.png
+!*/objects/screen.png
