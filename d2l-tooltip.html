@@ -406,7 +406,8 @@ Polymer-based web component for a D2L tooltip
 			},
 
 			_onKeydown: function(e) {
-				if (e.keyCode === 27) {
+				var keycode_esc = 27;
+				if (e.keyCode === keycode_esc) {
 					this._tappedOn = false;
 					this.showing = false;
 				}
