@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../d2l-colors/d2l-colors.html">
+<link rel="import" href="../d2l-polymer-behaviors/d2l-id.html">
 <link rel="import" href="../d2l-typography/d2l-typography-shared-styles.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 
@@ -379,7 +380,8 @@ Polymer-based web component for a D2L tooltip
 			_findTarget: function() {
 				this._removeListeners();
 				this._target = this.target;
-				if (this._target && this.id) {
+				if (this._target) {
+					this.id = this.id || D2L.Id.getUniqueId();
 					this._target.setAttribute('aria-describedby', this.id);
 				}
 				if (this.tapToggle) {
