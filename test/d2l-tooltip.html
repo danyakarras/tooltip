@@ -12,20 +12,26 @@
 	<body>
 		<test-fixture id="basic">
 			<template>
-				<d2l-tooltip label="basic"></d2l-tooltip>
+				<span id="basic-span">Hover me for tips</span>
+				<d2l-tooltip for="basic-span">If I got a problem then a problem's got a problem.</d2l-tooltip>
 			</template>
 		</test-fixture>
 
 		<script>
 			describe('d2l-tooltip', function() {
 
-				var elem;
+				var target, tooltip;
 
 				describe('basic', function() {
 
+					beforeEach(function(done) {
+						target = fixture('basic')[0]
+						tooltip = fixture('basic')[1];
+						flush(done);
+					});
+
 					it('should instantiate the element', function() {
-						elem = fixture('basic');
-						expect(elem.is).to.equal('d2l-tooltip');
+						expect(tooltip.is).to.equal('d2l-tooltip');
 					});
 
 				});

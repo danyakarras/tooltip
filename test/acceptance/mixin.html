@@ -1,0 +1,57 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="../../../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="../../../d2l-typography/d2l-typography.html">
+    <link rel="import" href="../../d2l-tooltip.html">
+		<style>
+			body {
+				margin: 50px;
+			}
+
+			.hover-link-container {
+				padding: 0 120px;
+			}
+
+			.box {
+				width: 100px;
+				height: 100px;
+				background-color: #e57231;
+				display: inline-block;
+				color: White;
+				display: flex;
+				align-items: center;
+				text-align: center;
+			}
+		</style>
+		<custom-style include="d2l-typography">
+			<style is="custom-style" include="d2l-typography">
+        .mixin-tooltip {
+          --d2l-tooltip-background-color: #ffffff;
+          --d2l-tooltip-border: 1px solid;
+          --d2l-tooltip-border-color:  #d3d9e3;
+
+          --d2l-tooltip-mixin: {
+            width: 200px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.08);
+            font-family: Lato;
+			line-height: 1;
+            color: #565a5c;
+          }
+        }
+      	</style>
+		</custom-style>
+		<script>
+		/*
+		window.Polymer = window.Polymer || {};
+		window.Polymer.dom = 'shadow';
+		*/
+		</script>
+	</head>
+  	<body class="d2l-typography">
+		<div class="hover-link-container">
+		<span class="box" id="theSpan">Hover me</span>
+		<d2l-tooltip id="theTooltip" position="bottom" class="mixin-tooltip" for="theSpan">I am tooltip!</d2l-tooltip>
+		<br />
+	</body>
+</html>
