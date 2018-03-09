@@ -365,7 +365,7 @@ Polymer-based web component for a D2L tooltip
 					this.hide();
 					this.unlisten(this.document, 'tap', '_documentClickListener');
 				} else {
-					this.listen(this.document, 'tap', '_documentClickListener');
+					setTimeout(function() { this.listen(this.document, 'tap', '_documentClickListener'); }.bind(this), 0);
 					this.show();
 				}
 			},
@@ -374,6 +374,7 @@ Polymer-based web component for a D2L tooltip
 				if (e.target.id !== this._target.id) {
 					this._tappedOn = false;
 					this.hide(undefined, true);
+					this.unlisten(this.document, 'tap', '_documentClickListener');
 				}
 			},
 
