@@ -25,9 +25,7 @@ var browsers = {
 	chromeMac: new SauceBrowserFactory({
 		browser: 'Chrome',
 		platform: 'SIERRA',
-		desiredCapabilities: {
-			chromedriverVersion: '2.36'
-		}
+		size: '1400x900'
 	}),
 	/* Safari and Firefox throw mouseMoveTo selenium errors trying to execute the hover, so skipping them */
 	// safariMac: new SauceBrowserFactory({
