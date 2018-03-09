@@ -25,11 +25,7 @@ var browsers = {
 	chromeMac: new SauceBrowserFactory({
 		browser: 'Chrome',
 		platform: 'SIERRA',
-		/* crashes during screenshot command on > 2.24
-		 *			https://bugs.chromium.org/p/chromedriver/issues/detail?id=1770# */
-		desiredCapabilities: {
-			chromedriverVersion: '2.24'
-		}
+		size: '1400x900'
 	}),
 	/* Safari and Firefox throw mouseMoveTo selenium errors trying to execute the hover, so skipping them */
 	// safariMac: new SauceBrowserFactory({
