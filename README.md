@@ -148,6 +148,8 @@ Custom CSS properties for styling:
 <d2l-tooltip for="target" position="right" class="mixin-tooltip">Hello world!</d2l-tooltip>
 ```
 
+_**NOTE:**_ Issues can arise when associating a `<d2l-tooltip>` with another web-component in a true [Shadow DOM][ShadowDOM] environment. One known example is when a focusable custom component has an associated tooltip; a screen reader may not read the tooltip when focused. This is due to the complexity with [how focus is handled inside the Shadow DOM][ShadowFocus] as well as ID scoping.
+
 ## Demo
 
 To run the demo run `npm install`, `polymer serve`.
@@ -164,6 +166,8 @@ To update the screenshots, run `npm run dump`. The screenshots will be placed un
 
 **Note for Windows users:** If you experience an error executing chromedriver (`CreateProcess error=193, %1 is not a valid Win32 application`) you can work around this by deleting the file `node_modules/.bin/chromedriver`. Once removed, Galen will then use the `chromedriver.cmd` file which should work correctly.
 
+[ShadowDOM]: https://www.polymer-project.org/2.0/docs/devguide/shadow-dom
+[ShadowFocus]: https://medium.com/dev-channel/focus-inside-shadow-dom-78e8a575b73
 [Galen]: http://galenframework.com/
 [GalenConfig]: http://galenframework.com/docs/getting-started-configuration/
 [GalenSpec]: http://galenframework.com/docs/reference-galen-spec-language-guide/
