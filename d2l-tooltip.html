@@ -288,6 +288,7 @@ Polymer-based web component for a D2L tooltip
 				}
 
 				this.showing = false;
+				this.unlisten(this.document, 'tap', '_documentClickListener');
 			},
 
 			updatePosition: function() {
@@ -363,7 +364,6 @@ Polymer-based web component for a D2L tooltip
 				this._tappedOn = !this._tappedOn;
 				if (!this._tappedOn) {
 					this.hide();
-					this.unlisten(this.document, 'tap', '_documentClickListener');
 				} else {
 					setTimeout(function() { this.listen(this.document, 'tap', '_documentClickListener'); }.bind(this), 0);
 					this.show();
@@ -374,7 +374,6 @@ Polymer-based web component for a D2L tooltip
 				if (e.target.id !== this._target.id) {
 					this._tappedOn = false;
 					this.hide(undefined, true);
-					this.unlisten(this.document, 'tap', '_documentClickListener');
 				}
 			},
 
@@ -410,7 +409,7 @@ Polymer-based web component for a D2L tooltip
 				var keycode_esc = 27;
 				if (e.keyCode === keycode_esc) {
 					this._tappedOn = false;
-					this.showing = false;
+					this.hide();
 				}
 			}
 		});
