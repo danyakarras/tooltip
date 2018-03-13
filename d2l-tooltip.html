@@ -383,9 +383,9 @@ Polymer-based web component for a D2L tooltip
 				if (this._target) {
 					this.id = this.id || D2L.Id.getUniqueId();
 					this._target.setAttribute('aria-describedby', this.id);
-				}
-				if (this.tapToggle) {
-					this._target.style.cursor = 'pointer';
+					if (this.tapToggle) {
+						this._target.style.cursor = 'pointer';
+					}
 				}
 				this._addListeners();
 			},
