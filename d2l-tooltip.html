@@ -235,6 +235,7 @@ Polymer-based web component for a D2L tooltip
 				var target;
 				if (this.for) {
 					target = Polymer.dom(ownerRoot).querySelector('#' + this.for);
+					target = target || (ownerRoot && ownerRoot.host && Polymer.dom(ownerRoot.host).querySelector('#' + this.for));
 				} else if (this.customTarget !== undefined) {
 					// Set to undefined because it is not used - target is a DOM node, whereas customTarget is an object
 					target = undefined;
@@ -382,6 +383,7 @@ Polymer-based web component for a D2L tooltip
 				this._target = this.target;
 				if (this._target) {
 					this.id = this.id || D2L.Id.getUniqueId();
+					this._target.setAttribute('aria-live', 'polite');
 					this._target.setAttribute('aria-describedby', this.id);
 					if (this.tapToggle) {
 						this._target.style.cursor = 'pointer';
