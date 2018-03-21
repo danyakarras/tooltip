@@ -23,6 +23,19 @@
 				align-items: center;
 				text-align: center;
 			}
+
+			.container {
+				background: lightgoldenrodyellow;
+				width: 500px;
+				height: 500px;
+				overflow: hidden;
+				margin-top: 20px;
+				position: relative;
+			}
+
+			.contained {
+				margin-top: 40px;
+			}
 		</style>
 		<custom-style include="d2l-typography">
 			<style is="custom-style" include="d2l-typography">
@@ -75,6 +88,13 @@
 			<br />
 			<button id="aria-button2">Focus me, too</button>
 			<d2l-tooltip position="right" for="aria-button2">I have a generated id</d2l-tooltip>
+			<br />
+			<div class="container">
+				<div class="contained">
+					<span class="box" id="top-contained">Hover me (top)</span>
+					<d2l-tooltip position="top" showing for="top-contained">This is at the top but should also be too wide for normal</d2l-tooltip>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
