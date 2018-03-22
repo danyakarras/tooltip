@@ -218,6 +218,11 @@ Polymer-based web component for a D2L tooltip
 					value: false
 				},
 
+				boundaries: {
+					type: Object,
+					value: { left: 0, right: 560 } // TODO: actually have this be passed in
+				},
+
 				_tappedOn: {
 					type: Boolean,
 					value: false
@@ -299,52 +304,113 @@ Polymer-based web component for a D2L tooltip
 					{ xScroll: 0, yScroll: 0 };
 			},
 
+			getOffsets: function(targetRect, thisRect) {
+				return {
+					horizontalCenterOffset: (targetRect.width - thisRect.width) / 2,
+					verticalCenterOffset: (targetRect.height - thisRect.height) / 2
+				};
+			},
+
+			getTargetPositions: function(targetRect, parentRect) {
+				var left = targetRect.left - parentRect.left;
+				var right = parentRect.right - targetRect.right;
+				return {
+					left: left,
+					right: right,
+					xCenter: (right - left) / 2,
+					top: targetRect.top - parentRect.top
+				};
+			},
+
+			getBoundaryWidth: function() {
+				return this.boundaries.right - this.boundaries.left;
+			},
+
+			getTooltipPositions: function(targetPositions, thisRect, targetRect) {
+				var offsets = this.getOffsets(targetRect, thisRect);
+				var scrollVals = this.getScrollVals();
+
+				var horizontalCenterOffset = offsets.horizontalCenterOffset;
+				var verticalCenterOffset = offsets.verticalCenterOffset;
+
+				var tooltipLeft, tooltipTop, tooltipRight, tooltipBottom;
+				switch (this.position) {
+					case 'top':
+						tooltipLeft = targetPositions.left + horizontalCenterOffset;
+						tooltipRight = targetPositions.right + horizontalCenterOffset;
+						tooltipTop = targetPositions.top - thisRect.height - this.offset;
+						break;
+					case 'bottom':
+						tooltipLeft = targetPositions.left + horizontalCenterOffset;
+						tooltipRight = targetPositions.right + horizontalCenterOffset;
+						tooltipTop = targetPositions.top + targetRect.height + this.offset;
+						break;
+					case 'left':
+						tooltipLeft = targetPositions.left - thisRect.width - this.offset;
+						tooltipTop = targetPositions.top + verticalCenterOffset;
+						break;
+					case 'right':
+						tooltipLeft = targetPositions.left + targetRect.width + this.offset;
+						tooltipTop = targetPositions.top + verticalCenterOffset;
+						break;
+				}
+
+				tooltipLeft += scrollVals.xScroll;
+				tooltipTop += scrollVals.yScroll;
+
+				return {
+					top: tooltipTop,
+					left: tooltipLeft,
+					right: tooltipRight,
+					bottom: tooltipBottom
+				};
+			},
+
+			updatetooltipPositionsForBoundary: function(tooltipPositions, parentRect) {
+				tooltipPositions.left = Math.max(this.boundaries.left, tooltipPositions.left);
+				tooltipPositions.right = Math.max(parentRect.width - this.boundaries.right, tooltipPositions.right);
+			},
+
+			setTooltipStyle: function(tooltipPositions, targetPositions) {
+				var boundaryWidth = this.getBoundaryWidth();
+				var boundaryCenter = boundaryWidth / 2;
+				// TODO: take boundaryless into account
+				var leftSideOfBoundary = targetPositions.xCenter > boundaryCenter / 2;
+
+				if (leftSideOfBoundary) {
+					this.style.left = tooltipPositions.left + 'px';
+					this.style.right = 'auto';
+				} else {
+					this.style.left = 'auto';
+					this.style.right = tooltipPositions.right  + 'px';
+				}
+
+				this.style.top = tooltipPositions.top + 'px';
+				this.style.maxWidth = this.getBoundaryWidth() + 'px';
+
+				if (this.tooltipPadding) {
+					this.$.tooltip.style.padding = this.tooltipPadding + 'px';
+				}
+			},
+
 			updatePosition: function() {
 				if (!this.customTarget && (!this._target || !this.offsetParent)) {
 					return;
 				}
 
-				var offset = this.offset;
 				var parentRect = (this.customTarget || this.offsetParent.tagName === 'BODY') ?
 					{ left: 0, top: 0, right: 0, bottom: 0 } :
 					this.offsetParent.getBoundingClientRect();
+
 				var targetRect = this.customTarget ? this.customTarget : this._target.getBoundingClientRect();
 				var thisRect = this.getBoundingClientRect();
 
-				var scrollVals = this.getScrollVals();
-				var xScroll = scrollVals.xScroll;
-				var yScroll = scrollVals.yScroll;
+				var targetPositions = this.getTargetPositions(targetRect, parentRect);
 
-				var horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
-				var verticalCenterOffset = (targetRect.height - thisRect.height) / 2;
-				var targetLeft = targetRect.left - parentRect.left;
-				var targetTop = targetRect.top - parentRect.top;
+				var tooltipPositions = this.getTooltipPositions(targetPositions, thisRect, targetRect);
+				this.updatetooltipPositionsForBoundary(tooltipPositions, parentRect);
 
-				var tooltipLeft, tooltipTop;
-				switch (this.position) {
-					case 'top':
-						tooltipLeft = targetLeft + horizontalCenterOffset + xScroll;
-						tooltipTop = targetTop - thisRect.height - offset + yScroll;
-						break;
-					case 'bottom':
-						tooltipLeft = targetLeft + horizontalCenterOffset + xScroll;
-						tooltipTop = targetTop + targetRect.height + offset + yScroll;
-						break;
-					case 'left':
-						tooltipLeft = targetLeft - thisRect.width - offset + xScroll;
-						tooltipTop = targetTop + verticalCenterOffset + yScroll;
-						break;
-					case 'right':
-						tooltipLeft = targetLeft + targetRect.width + offset + xScroll;
-						tooltipTop = targetTop + verticalCenterOffset + yScroll;
-						break;
-				}
-
-				this.style.left = tooltipLeft + 'px';
-				this.style.top = tooltipTop + 'px';
-				if (this.tooltipPadding) {
-					this.$.tooltip.style.padding = this.tooltipPadding + 'px';
-				}
+				this.setTooltipStyle(tooltipPositions, targetPositions);
 			},
 
 			get document() {

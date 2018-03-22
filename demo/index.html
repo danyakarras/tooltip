@@ -32,6 +32,12 @@
 				margin-top: 20px;
 				position: relative;
 				padding: 30px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+
+			.container .box {
+				display: inline-block;
 			}
 
 			.contained {
@@ -92,8 +98,14 @@
 			<br />
 			<div class="container">
 				<div class="contained">
+					filler fillerfiller filler filler filler filler filler
 					<span class="box" id="top-contained">Hover me (top)</span>
-					<d2l-tooltip position="top" showing for="top-contained">This is at the top but should also be too wide for normal</d2l-tooltip>
+					<d2l-tooltip
+						tap-toggle
+						position="bottom"
+						showing
+						for="top-contained"
+					>This is at the s s s s s s s t o pThis is</d2l-tooltip>
 				</div>
 			</div>
 		</div>
