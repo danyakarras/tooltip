@@ -148,6 +148,8 @@ Custom CSS properties for styling:
 <d2l-tooltip for="target" position="right" class="mixin-tooltip">Hello world!</d2l-tooltip>
 ```
 
+* `boundary` (object) - optionally provide boundaries to where the tooltip will appear. Valid properties are "above", "below", "left", "right"
+
 _**NOTE:**_ Issues can arise when associating a `<d2l-tooltip>` with another web-component in a true [Shadow DOM][ShadowDOM] environment. One known example is when a focusable custom component has an associated tooltip; a screen reader may not read the tooltip when focused. This is due to the complexity with [how focus is handled inside the Shadow DOM][ShadowFocus] as well as ID scoping.
 
 ## Demo

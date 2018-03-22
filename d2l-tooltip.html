@@ -70,8 +70,8 @@ Polymer-based web component for a D2L tooltip
 			:host .d2l-tooltip-triangle {
 				clip: rect(-5px, 21px, 8px, -3px);
 				display: inline-block;
-				left: calc(50% - 8px);
 				position: absolute;
+				left: calc(50% + 8px);
 				top: -7px;
 				z-index: 1;
 			}
@@ -202,6 +202,12 @@ Polymer-based web component for a D2L tooltip
 					value: 8
 				},
 
+				/**
+				* Optionally provide boundaries where the tooltip will appear. Valid values are `above`,
+				* `below`, `left`, or `right`.
+				*/
+				boundary: Object,
+
 				showing: {
 					type: Boolean,
 					value: false,
@@ -315,22 +321,35 @@ Polymer-based web component for a D2L tooltip
 				var tooltipLeft, tooltipTop;
 				switch (this.position) {
 					case 'top':
-						tooltipLeft = targetLeft + horizontalCenterOffset + xScroll;
-						tooltipTop = targetTop - thisRect.height - offset + yScroll;
+						tooltipLeft = targetLeft + horizontalCenterOffset;
+						tooltipTop = targetTop - thisRect.height - offset;
 						break;
 					case 'bottom':
-						tooltipLeft = targetLeft + horizontalCenterOffset + xScroll;
-						tooltipTop = targetTop + targetRect.height + offset + yScroll;
+						tooltipLeft = targetLeft + horizontalCenterOffset;
+						tooltipTop = targetTop + targetRect.height + offset;
 						break;
 					case 'left':
-						tooltipLeft = targetLeft - thisRect.width - offset + xScroll;
-						tooltipTop = targetTop + verticalCenterOffset + yScroll;
+						tooltipLeft = targetLeft - thisRect.width - offset;
+						tooltipTop = targetTop + verticalCenterOffset;
 						break;
 					case 'right':
-						tooltipLeft = targetLeft + targetRect.width + offset + xScroll;
-						tooltipTop = targetTop + verticalCenterOffset + yScroll;
+						tooltipLeft = targetLeft + targetRect.width + offset;
+						tooltipTop = targetTop + verticalCenterOffset;
 						break;
 				}
+
+				if (this.boundary && Number.isInteger(this.boundary.left)) {
+					var leftShift = Math.abs(tooltipLeft - Math.max(this.boundary.left, tooltipLeft));
+					tooltipLeft = Math.max(this.boundary.left, tooltipLeft);
+					var triangleLeft = Math.max((thisRect.width / 2) - leftShift - 8, 8);
+					Polymer.dom(this.$.tooltip).querySelector('.d2l-tooltip-triangle').style.left = triangleLeft + 'px';
+				}
+				if (this.boundary && Number.isInteger(this.boundary.top)) {
+					tooltipTop = Math.max(this.boundary.top, tooltipTop);
+				}
+
+				tooltipLeft += xScroll;
+				tooltipTop += yScroll;
 
 				this.style.left = tooltipLeft + 'px';
 				this.style.top = tooltipTop + 'px';
