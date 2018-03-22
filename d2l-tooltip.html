@@ -70,7 +70,7 @@ Polymer-based web component for a D2L tooltip
 			:host .d2l-tooltip-triangle {
 				clip: rect(-5px, 21px, 8px, -3px);
 				display: inline-block;
-				left: calc(50% - 8px);
+				left: calc(50% + 8px);
 				position: absolute;
 				top: -7px;
 				z-index: 1;
@@ -365,21 +365,26 @@ Polymer-based web component for a D2L tooltip
 				};
 			},
 
+			_useBoundaries: function() {
+				// Boundaries currently only supported with top/bottom positions
+				return this.boundaries && (this.position === 'top' || this.position === 'bottom');
+			},
+
+			_shouldPositionUsingLeft: function(targetPositions) {
+				return !this._useBoundaries() || targetPositions.xCenter > this.getBoundaryWidth() / 4;
+			},
+
 			updatetooltipPositionsForBoundary: function(tooltipPositions, parentRect) {
-				if (this.boundaries) {
-					tooltipPositions.left = Math.max(this.boundaries.left, tooltipPositions.left);
-					tooltipPositions.right = Math.max(parentRect.width - this.boundaries.right, tooltipPositions.right);
+				if (!this._useBoundaries()) {
+					return;
 				}
+
+				tooltipPositions.left = Math.max(this.boundaries.left, tooltipPositions.left);
+				tooltipPositions.right = Math.max(parentRect.width - this.boundaries.right, tooltipPositions.right);
 			},
 
 			setTooltipStyle: function(tooltipPositions, targetPositions) {
-				var positionUsingLeft =
-					!this.boundaries ||
-					this.position === 'left' || // Positioning from the right currently only supported with top/bottom positions
-					this.position === 'right' ||
-					targetPositions.xCenter > this.getBoundaryWidth() / 4;
-
-				if (positionUsingLeft) {
+				if (this._shouldPositionUsingLeft(targetPositions)) {
 					this.style.left = tooltipPositions.left + 'px';
 					this.style.right = 'auto';
 				} else {
@@ -395,6 +400,20 @@ Polymer-based web component for a D2L tooltip
 
 				if (this.tooltipPadding) {
 					this.$.tooltip.style.padding = this.tooltipPadding + 'px';
+				}
+			},
+
+			setTriangleStyle: function(thisRect, tooltipPositions, targetPositions) {
+				if (!this._useBoundaries()) {
+					return;
+				}
+
+				// ABS?
+				// TODO: CURRENTLY WORKING ON THIS
+				if (this._shouldPositionUsingLeft(targetPositions)) {
+					var leftShift = Math.abs(tooltipPositions.left - Math.max(this.boundaries.left, tooltipPositions.left));
+					var triangleLeft = Math.max((thisRect.width / 2) - leftShift - 8, 8);
+					Polymer.dom(this.$.tooltip).querySelector('.d2l-tooltip-triangle').style.left = triangleLeft + 'px';
 				}
 			},
 
@@ -416,6 +435,7 @@ Polymer-based web component for a D2L tooltip
 				this.updatetooltipPositionsForBoundary(tooltipPositions, parentRect);
 
 				this.setTooltipStyle(tooltipPositions, targetPositions);
+				this.setTriangleStyle(thisRect, tooltipPositions, targetPositions);
 			},
 
 			get document() {
