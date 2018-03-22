@@ -333,7 +333,7 @@ Polymer-based web component for a D2L tooltip
 				var horizontalCenterOffset = offsets.horizontalCenterOffset;
 				var verticalCenterOffset = offsets.verticalCenterOffset;
 
-				var tooltipLeft, tooltipTop, tooltipRight, tooltipBottom;
+				var tooltipLeft, tooltipTop, tooltipRight;
 				switch (this.position) {
 					case 'top':
 						tooltipLeft = targetPositions.left + horizontalCenterOffset;
@@ -361,23 +361,25 @@ Polymer-based web component for a D2L tooltip
 				return {
 					top: tooltipTop,
 					left: tooltipLeft,
-					right: tooltipRight,
-					bottom: tooltipBottom
+					right: tooltipRight
 				};
 			},
 
 			updatetooltipPositionsForBoundary: function(tooltipPositions, parentRect) {
-				tooltipPositions.left = Math.max(this.boundaries.left, tooltipPositions.left);
-				tooltipPositions.right = Math.max(parentRect.width - this.boundaries.right, tooltipPositions.right);
+				if (this.boundaries) {
+					tooltipPositions.left = Math.max(this.boundaries.left, tooltipPositions.left);
+					tooltipPositions.right = Math.max(parentRect.width - this.boundaries.right, tooltipPositions.right);
+				}
 			},
 
 			setTooltipStyle: function(tooltipPositions, targetPositions) {
-				var boundaryWidth = this.getBoundaryWidth();
-				var boundaryCenter = boundaryWidth / 2;
-				// TODO: take boundaryless into account
-				var leftSideOfBoundary = targetPositions.xCenter > boundaryCenter / 2;
+				var positionUsingLeft =
+					!this.boundaries ||
+					this.position === 'left' || // Positioning from the right currently only supported with top/bottom positions
+					this.position === 'right' ||
+					targetPositions.xCenter > this.getBoundaryWidth() / 4;
 
-				if (leftSideOfBoundary) {
+				if (positionUsingLeft) {
 					this.style.left = tooltipPositions.left + 'px';
 					this.style.right = 'auto';
 				} else {
@@ -386,7 +388,10 @@ Polymer-based web component for a D2L tooltip
 				}
 
 				this.style.top = tooltipPositions.top + 'px';
-				this.style.maxWidth = this.getBoundaryWidth() + 'px';
+
+				if (this.boundaries) {
+					this.style.maxWidth = this.getBoundaryWidth() + 'px';
+				}
 
 				if (this.tooltipPadding) {
 					this.$.tooltip.style.padding = this.tooltipPadding + 'px';
