@@ -70,7 +70,7 @@ Polymer-based web component for a D2L tooltip
 			:host .d2l-tooltip-triangle {
 				clip: rect(-5px, 21px, 8px, -3px);
 				display: inline-block;
-				left: calc(50% + 8px);
+				left: calc(50% - 8px);
 				position: absolute;
 				top: -7px;
 				z-index: 1;
@@ -220,7 +220,7 @@ Polymer-based web component for a D2L tooltip
 
 				boundaries: {
 					type: Object,
-					value: { left: 0, right: 560 } // TODO: actually have this be passed in
+					value: null
 				},
 
 				_tappedOn: {

@@ -90,6 +90,12 @@ Use the `postition` attribute to place the tooltip to the top, bottom, left, or 
 <d2l-tooltip for="target" position="right">Hello world!</d2l-tooltip>
 ```
 
+To constrain your tooltip to a certain area, pass in a `boundaries` property containing the pixel amounts you want the tooltip to be restricted to. Currently only the left and right boundaries are supported for the top and bottom positions.
+
+```javascript
+{ left: 10, right: 200 }
+```
+
 Custom CSS properties for styling:
 
 - All three properties should be set to style the box correctly:
