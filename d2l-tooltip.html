@@ -292,6 +292,13 @@ Polymer-based web component for a D2L tooltip
 				this.unlisten(this.document, 'tap', '_documentClickListener');
 			},
 
+			getScrollVals: function() {
+				var parentStyle = window.getComputedStyle(this.offsetParent);
+				return (parentStyle && parentStyle.getPropertyValue('position') === 'static') ?
+					{ xScroll: window.pageXOffset, yScroll: window.pageYOffset } :
+					{ xScroll: 0, yScroll: 0 };
+			},
+
 			updatePosition: function() {
 				if (!this.customTarget && (!this._target || !this.offsetParent)) {
 					return;
@@ -304,8 +311,9 @@ Polymer-based web component for a D2L tooltip
 				var targetRect = this.customTarget ? this.customTarget : this._target.getBoundingClientRect();
 				var thisRect = this.getBoundingClientRect();
 
-				var xScroll = window.pageXOffset;
-				var yScroll = window.pageYOffset;
+				var scrollVals = this.getScrollVals();
+				var xScroll = scrollVals.xScroll;
+				var yScroll = scrollVals.yScroll;
 
 				var horizontalCenterOffset = (targetRect.width - thisRect.width) / 2;
 				var verticalCenterOffset = (targetRect.height - thisRect.height) / 2;

@@ -22,11 +22,12 @@ var browsers = {
 	// 	size: '1400x900',
 	// 	tags: ['no-d2l-shadow']
 	// }),
-	chromeMac: new SauceBrowserFactory({
-		browser: 'Chrome',
-		platform: 'SIERRA',
-		size: '1400x900'
-	}),
+	// REMOVING DUE TO CHROME WEBDRIVER ISSUE
+	// chromeMac: new SauceBrowserFactory({
+	// 	browser: 'Chrome',
+	// 	platform: 'SIERRA',
+	// 	size: '1400x900'
+	// }),
 	/* Safari and Firefox throw mouseMoveTo selenium errors trying to execute the hover, so skipping them */
 	// safariMac: new SauceBrowserFactory({
 	// 	browser: 'Safari',
