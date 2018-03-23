@@ -218,7 +218,7 @@ Polymer-based web component for a D2L tooltip
 					value: false
 				},
 
-				boundaries: {
+				boundary: {
 					type: Object,
 					value: null
 				},
@@ -336,41 +336,38 @@ Polymer-based web component for a D2L tooltip
 				return {
 					left: left,
 					right: right,
-					xCenter: (right - left) / 2,
+					horizontalCenter: (right - left) / 2,
 					top: targetRect.top - parentRect.top
 				};
 			},
 
 			get boundaryWidth() {
-				return this.boundaries.right - this.boundaries.left;
+				return this.boundary.right - this.boundary.left;
 			},
 
 			_getTooltipPositions: function(targetPositions, thisRect, targetRect) {
 				var offsets = this._getOffsets(targetRect, thisRect);
 				var scrollVals = this._getScrollVals();
 
-				var horizontalCenterOffset = offsets.horizontalCenterOffset;
-				var verticalCenterOffset = offsets.verticalCenterOffset;
-
 				var tooltipLeft, tooltipTop, tooltipRight;
 				switch (this.position) {
 					case 'top':
-						tooltipLeft = targetPositions.left + horizontalCenterOffset;
-						tooltipRight = targetPositions.right + horizontalCenterOffset;
+						tooltipLeft = targetPositions.left + offsets.horizontalCenterOffset;
+						tooltipRight = targetPositions.right + offsets.horizontalCenterOffset;
 						tooltipTop = targetPositions.top - thisRect.height - this.offset;
 						break;
 					case 'bottom':
-						tooltipLeft = targetPositions.left + horizontalCenterOffset;
-						tooltipRight = targetPositions.right + horizontalCenterOffset;
+						tooltipLeft = targetPositions.left + offsets.horizontalCenterOffset;
+						tooltipRight = targetPositions.right + offsets.horizontalCenterOffset;
 						tooltipTop = targetPositions.top + targetRect.height + this.offset;
 						break;
 					case 'left':
 						tooltipLeft = targetPositions.left - thisRect.width - this.offset;
-						tooltipTop = targetPositions.top + verticalCenterOffset;
+						tooltipTop = targetPositions.top + offsets.verticalCenterOffset;
 						break;
 					case 'right':
 						tooltipLeft = targetPositions.left + targetRect.width + this.offset;
-						tooltipTop = targetPositions.top + verticalCenterOffset;
+						tooltipTop = targetPositions.top + offsets.verticalCenterOffset;
 						break;
 				}
 
@@ -386,7 +383,7 @@ Polymer-based web component for a D2L tooltip
 
 			_useBoundaries: function() {
 				// Boundaries currently only supported with top/bottom positions
-				return this.boundaries && (this.position === 'top' || this.position === 'bottom');
+				return this.boundary && (this.position === 'top' || this.position === 'bottom');
 			},
 
 			_updateTooltipPositionsForBoundary: function(tooltipPositions, parentRect) {
@@ -396,8 +393,8 @@ Polymer-based web component for a D2L tooltip
 
 				var prevLeft = tooltipPositions.left;
 				var prevRight = tooltipPositions.right;
-				tooltipPositions.left = Math.max(this.boundaries.left, tooltipPositions.left);
-				tooltipPositions.right = Math.max(parentRect.width - this.boundaries.right, tooltipPositions.right);
+				tooltipPositions.left = Math.max(this.boundary.left, tooltipPositions.left);
+				tooltipPositions.right = Math.max(parentRect.width - this.boundary.right, tooltipPositions.right);
 
 				return {
 					leftShift: tooltipPositions.left - prevLeft,
@@ -406,7 +403,7 @@ Polymer-based web component for a D2L tooltip
 			},
 
 			_shouldPositionUsingLeft: function(targetPositions) {
-				return !this._useBoundaries() || targetPositions.xCenter > this.boundaryWidth / 4;
+				return !this._useBoundaries() || targetPositions.horizontalCenter > this.boundaryWidth / 4;
 			},
 
 			_setTooltipStyle: function(tooltipPositions, targetPositions) {
@@ -420,7 +417,7 @@ Polymer-based web component for a D2L tooltip
 
 				this.style.top = tooltipPositions.top + 'px';
 
-				if (this.boundaries) {
+				if (this.boundary) {
 					this.style.maxWidth = this.boundaryWidth + 'px';
 				}
 
