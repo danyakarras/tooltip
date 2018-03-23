@@ -297,21 +297,40 @@ Polymer-based web component for a D2L tooltip
 				this.unlisten(this.document, 'tap', '_documentClickListener');
 			},
 
-			getScrollVals: function() {
+			updatePosition: function() {
+				if (!this.customTarget && (!this._target || !this.offsetParent)) {
+					return;
+				}
+
+				var targetRect = this.customTarget ? this.customTarget : this._target.getBoundingClientRect();
+				var thisRect = this.getBoundingClientRect();
+				var parentRect = (this.customTarget || this.offsetParent.tagName === 'BODY') ?
+					{ left: 0, top: 0, right: 0, bottom: 0 } :
+					this.offsetParent.getBoundingClientRect();
+
+				var targetPositions = this._getTargetPositions(targetRect, parentRect);
+				var tooltipPositions = this._getTooltipPositions(targetPositions, thisRect, targetRect);
+				var boundaryShifts = this._updateTooltipPositionsForBoundary(tooltipPositions, parentRect);
+
+				this._setTooltipStyle(tooltipPositions, targetPositions);
+				this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
+			},
+
+			_getScrollVals: function() {
 				var parentStyle = window.getComputedStyle(this.offsetParent);
 				return (parentStyle && parentStyle.getPropertyValue('position') === 'static') ?
 					{ xScroll: window.pageXOffset, yScroll: window.pageYOffset } :
 					{ xScroll: 0, yScroll: 0 };
 			},
 
-			getOffsets: function(targetRect, thisRect) {
+			_getOffsets: function(targetRect, thisRect) {
 				return {
 					horizontalCenterOffset: (targetRect.width - thisRect.width) / 2,
 					verticalCenterOffset: (targetRect.height - thisRect.height) / 2
 				};
 			},
 
-			getTargetPositions: function(targetRect, parentRect) {
+			_getTargetPositions: function(targetRect, parentRect) {
 				var left = targetRect.left - parentRect.left;
 				var right = parentRect.right - targetRect.right;
 				return {
@@ -322,13 +341,13 @@ Polymer-based web component for a D2L tooltip
 				};
 			},
 
-			getBoundaryWidth: function() {
+			get boundaryWidth() {
 				return this.boundaries.right - this.boundaries.left;
 			},
 
-			getTooltipPositions: function(targetPositions, thisRect, targetRect) {
-				var offsets = this.getOffsets(targetRect, thisRect);
-				var scrollVals = this.getScrollVals();
+			_getTooltipPositions: function(targetPositions, thisRect, targetRect) {
+				var offsets = this._getOffsets(targetRect, thisRect);
+				var scrollVals = this._getScrollVals();
 
 				var horizontalCenterOffset = offsets.horizontalCenterOffset;
 				var verticalCenterOffset = offsets.verticalCenterOffset;
@@ -370,20 +389,27 @@ Polymer-based web component for a D2L tooltip
 				return this.boundaries && (this.position === 'top' || this.position === 'bottom');
 			},
 
-			_shouldPositionUsingLeft: function(targetPositions) {
-				return !this._useBoundaries() || targetPositions.xCenter > this.getBoundaryWidth() / 4;
-			},
-
-			updatetooltipPositionsForBoundary: function(tooltipPositions, parentRect) {
+			_updateTooltipPositionsForBoundary: function(tooltipPositions, parentRect) {
 				if (!this._useBoundaries()) {
 					return;
 				}
 
+				var prevLeft = tooltipPositions.left;
+				var prevRight = tooltipPositions.right;
 				tooltipPositions.left = Math.max(this.boundaries.left, tooltipPositions.left);
 				tooltipPositions.right = Math.max(parentRect.width - this.boundaries.right, tooltipPositions.right);
+
+				return {
+					leftShift: tooltipPositions.left - prevLeft,
+					rightShift: tooltipPositions.right - prevRight
+				};
 			},
 
-			setTooltipStyle: function(tooltipPositions, targetPositions) {
+			_shouldPositionUsingLeft: function(targetPositions) {
+				return !this._useBoundaries() || targetPositions.xCenter > this.boundaryWidth / 4;
+			},
+
+			_setTooltipStyle: function(tooltipPositions, targetPositions) {
 				if (this._shouldPositionUsingLeft(targetPositions)) {
 					this.style.left = tooltipPositions.left + 'px';
 					this.style.right = 'auto';
@@ -395,7 +421,7 @@ Polymer-based web component for a D2L tooltip
 				this.style.top = tooltipPositions.top + 'px';
 
 				if (this.boundaries) {
-					this.style.maxWidth = this.getBoundaryWidth() + 'px';
+					this.style.maxWidth = this.boundaryWidth + 'px';
 				}
 
 				if (this.tooltipPadding) {
@@ -403,39 +429,26 @@ Polymer-based web component for a D2L tooltip
 				}
 			},
 
-			setTriangleStyle: function(thisRect, tooltipPositions, targetPositions) {
+			_setTriangleStyle: function(thisRect, tooltipPositions, targetPositions, boundaryShifts) {
 				if (!this._useBoundaries()) {
 					return;
 				}
 
-				// ABS?
-				// TODO: CURRENTLY WORKING ON THIS
+				var tooltipTriangle = this.$$('.d2l-tooltip-triangle');
+
 				if (this._shouldPositionUsingLeft(targetPositions)) {
-					var leftShift = Math.abs(tooltipPositions.left - Math.max(this.boundaries.left, tooltipPositions.left));
-					var triangleLeft = Math.max((thisRect.width / 2) - leftShift - 8, 8);
-					Polymer.dom(this.$.tooltip).querySelector('.d2l-tooltip-triangle').style.left = triangleLeft + 'px';
+					var triangleLeft = this._calculateTriangleShift(thisRect, boundaryShifts.leftShift);
+					tooltipTriangle.style.left = triangleLeft + 'px';
+					tooltipTriangle.style.right = 'auto';
+				} else {
+					var triangleRight = this._calculateTriangleShift(thisRect, boundaryShifts.rightShift);
+					tooltipTriangle.style.left = 'auto';
+					tooltipTriangle.style.right = triangleRight + 'px';
 				}
 			},
 
-			updatePosition: function() {
-				if (!this.customTarget && (!this._target || !this.offsetParent)) {
-					return;
-				}
-
-				var parentRect = (this.customTarget || this.offsetParent.tagName === 'BODY') ?
-					{ left: 0, top: 0, right: 0, bottom: 0 } :
-					this.offsetParent.getBoundingClientRect();
-
-				var targetRect = this.customTarget ? this.customTarget : this._target.getBoundingClientRect();
-				var thisRect = this.getBoundingClientRect();
-
-				var targetPositions = this.getTargetPositions(targetRect, parentRect);
-
-				var tooltipPositions = this.getTooltipPositions(targetPositions, thisRect, targetRect);
-				this.updatetooltipPositionsForBoundary(tooltipPositions, parentRect);
-
-				this.setTooltipStyle(tooltipPositions, targetPositions);
-				this.setTriangleStyle(thisRect, tooltipPositions, targetPositions);
+			_calculateTriangleShift: function(thisRect, shiftVal) {
+				return Math.max((thisRect.width / 2) - shiftVal - 8, 8);
 			},
 
 			get document() {
