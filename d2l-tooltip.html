@@ -310,17 +310,24 @@ Polymer-based web component for a D2L tooltip
 
 				var targetPositions = this._getTargetPositions(targetRect, parentRect);
 				var tooltipPositions = this._getTooltipPositions(targetPositions, thisRect, targetRect);
-				var boundaryShifts = this._updateTooltipPositionsForBoundary(tooltipPositions, parentRect);
+
+				var boundaryParent = this.offsetParent ? this.offsetParent.getBoundingClientRect() : { left: 0, top: 0, right: 0, bottom: 0 };
+				var boundaryShifts = this._updateTooltipPositionsForBoundary(tooltipPositions, boundaryParent);
 
 				this._setTooltipStyle(tooltipPositions, targetPositions);
 				this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
 			},
 
 			_getScrollVals: function() {
-				var parentStyle = window.getComputedStyle(this.offsetParent);
-				return (parentStyle && parentStyle.getPropertyValue('position') === 'static') ?
-					{ xScroll: window.pageXOffset, yScroll: window.pageYOffset } :
-					{ xScroll: 0, yScroll: 0 };
+				if (this.offsetParent) {
+					var parentStyle = window.getComputedStyle(this.offsetParent);
+					return (parentStyle && parentStyle.getPropertyValue('position') === 'static') ?
+						{ xScroll: window.pageXOffset, yScroll: window.pageYOffset } :
+						{ xScroll: 0, yScroll: 0 };
+				} else {
+					return { xScroll: 0, yScroll: 0 };
+				}
+
 			},
 
 			_getOffsets: function(targetRect, thisRect) {
@@ -332,7 +339,7 @@ Polymer-based web component for a D2L tooltip
 
 			_getTargetPositions: function(targetRect, parentRect) {
 				var left = targetRect.left - parentRect.left;
-				var right = parentRect.right - targetRect.right;
+				var right = Math.abs(parentRect.right - targetRect.right);
 				return {
 					left: left,
 					right: right,
