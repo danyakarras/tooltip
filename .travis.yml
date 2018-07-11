@@ -4,21 +4,20 @@ addons:
   apt:
     packages:
     - oracle-java8-installer
-  artifacts:
-    key:
-      secure: PHeRyMpxCaZnDu65fC2ilrgr8X5YINKogKjck0/dTm2T/B1KPnGJP8+CV9RCdAOvT0iaJ9IymcPFgIU8+WIbLNGwziQK7xG+bKTchbWZOtjEDlHrCqyaQPgBQ2r8/uhZuhT6MXRQinK5ARj6Pw2xj5qh0HdAut0J4U5qjoMhhx/apQZyvIeVOraUqbFPqDAqXSfcx5nhyjNd3JLX3UK58idWjpHVPdAU9yYBO5f5cgPvTUvfFOSKPp8ZdlmDS0rbM7Dr3mK8ba4whL9AMeXdkOEV20T8yRA4cs66IUgCmLMb9c7KSjyLcQZbgkHIjCHPdd9G8Pi/MAqApAIn8GaH5m+S0XDOPN3JZjvyusDt0loagPYjABHufPcJSsERZ3C9xQpxdpjPDM8/Bnls26WKxJHn8wCVzAaVTKvKX9THwQEjw15R68pplCq8IfgYhwUNro3ZfDz032GrBa0MH3osuyCxa8y7nSDmGgXk6wcXten7tTKVjVibGATLSk5l7vFRwyhVB2Q2sLbpKmVV/pI5mqss6r+LgwlHI00TD3nO0DHnCE1lfDLe0OKUNnVi2oiy1+1aR4NN02mW1CKR2/QMA4lIw/5IQhJGBfDFwPBrljy7zcYZ+XyxW+m/27pOzl/JuaRzoMZSH5s6zfahbwxX1zgKkJA9SvpREUq9zQgnYUE=
-    secret:
-      secure: z8fwvR22EEAjyieRnCnb7+bWZ/ei3zqZhzj28cCWAZm4ynX0dgFJRGqLuQuS4ErqZDG6fCvJWOIQYT1ufy9QN8dNBJnN+iDB2znveuoGTi3LEFOW2N0pCkBTkZt/q1dkOqOKLTvFR+qm3NoXbD/TWYsQCa/y2SgOpzCoJpXjMU+r7udSEnGg53NzucSgP92oq2+Gm825tMoYE8JNWbu+tIgyrHDKuFB7WBtA/C66+nCD49N+9QxG17/skaQQBEoeZ/9AI+cX8gYI7YNdUzBfJYvmDzgh/iR13NOqvYZtBngVJGQIEupa38WL/PVmBmmLTcKpha8nRhVQaBNvb73CXNgag9d00OcWBJkhzBJZlZ4MEdmmLgAKyYz1NU01Jq7Is3o50+nTbb2kVOXoOXqu46rjZ2gTpUuWYF2I9aa9pJq9niRZPr3w7a6TaEvAg7Co9AdxEY43LaOg7Va/STDLcMwwgz2yvRaVKwfa2jicHvJZ2CxEIC9/ZUn0B18lKJyIyKCiMPHBfOwniyWT56I73YyBQDLRdRDkq/PE2uWFKJ9WrMtfCSHErFgrNRZgo/BI4khzWuzkp7xrhZi2q/fsyoiI2pWLSlyAjSa1HNbWJTFc8LisC5Q1adjcu2xC7ATxr+q+rDDuPGgFZWHPByclQDN0cLZ9WiFNNXaYmgIXTBg=
-    bucket: sequence-viewer-artifacts
-    paths:
-    - reports
+  chrome: stable
 before_install:
 - export JAVA_HOME=/usr/lib/jvm/java-8-oracle
 - export PATH=$JAVA_HOME/bin:$PATH
 script:
-- npm run test:lint
-- 'if [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_PULL_REQUEST" == "false" ]; then polymer test --skip-plugin local && npm run test:galen:sauce; fi'
-- 'if [ "$TRAVIS_SECURE_ENV_VARS" = "false" ]; then polymer test --skip-plugin sauce; fi'
+- npm run lint
+- |
+  if [ $TRAVIS_PULL_REQUEST != false ] && [ $TRAVIS_SECURE_ENV_VARS == true ]; then
+    echo "Pull request with secure environment variables, running Sauce tests...";
+    npm run test:polymer:sauce && npm run test:galen:sauce || travis_terminate 1;
+  else
+    echo "Not a pull request and/or no secure environment variables, running headless tests...";
+    npm run test:polymer:local || travis_terminate 1;
+  fi
 env:
   global:
     - SAUCE_USERNAME: Desire2Learn
