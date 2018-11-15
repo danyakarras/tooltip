@@ -12,25 +12,54 @@
 	<body>
 		<test-fixture id="basic">
 			<template>
-				<span id="basic-span">Hover me for tips</span>
-				<d2l-tooltip for="basic-span">If I got a problem then a problem's got a problem.</d2l-tooltip>
+				<div>
+					<span id="basic-span" tabindex="-1">Hover me for tips</span>
+					<d2l-tooltip for="basic-span">If I got a problem then a problem's got a problem.</d2l-tooltip>
+					<a href="https://www.google.com">some link</a>
+				</div>
 			</template>
 		</test-fixture>
 
 		<script>
 			describe('d2l-tooltip', function() {
 
-				var tooltip;
+				var tooltipFixture, tooltip;
 
 				describe('basic', function() {
 
 					beforeEach(function(done) {
-						tooltip = fixture('basic')[1];
+						tooltipFixture = fixture('basic');
+						tooltip = tooltipFixture.querySelector('d2l-tooltip');
 						flush(done);
 					});
 
 					it('should instantiate the element', function() {
 						expect(tooltip.is).to.equal('d2l-tooltip');
+					});
+
+					it('should trigger the show event when target is focused', function(done) {
+						tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+							requestAnimationFrame(function() {
+								expect(tooltip.hasAttribute('showing')).to.equal(true);
+								done();
+							});
+						});
+						tooltipFixture.querySelector('#basic-span').focus();
+					});
+
+					it('should trigger the hide event when target is focused', function(done) {
+						tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+							requestAnimationFrame(function() {
+								tooltipFixture.querySelector('a').focus();
+							});
+						});
+						tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
+							requestAnimationFrame(function() {
+								expect(tooltip.hasAttribute('showing')).to.equal(false);
+								done();
+							});
+						});
+						tooltipFixture.querySelector('span').focus();
 					});
 
 				});

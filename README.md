@@ -154,6 +154,14 @@ Custom CSS properties for styling:
 <d2l-tooltip for="target" position="right" class="mixin-tooltip">Hello world!</d2l-tooltip>
 ```
 
+```javascript
+// triggered when tooltip shown
+tooltip.addEventListener('d2l-tooltip-show', () => { ... });
+
+// triggered when tooltip hidden
+tooltip.addEventListener('d2l-tooltip-hide', () => { ... });
+```
+
 _**NOTE:**_ Issues can arise when associating a `<d2l-tooltip>` with another web-component in a true [Shadow DOM][ShadowDOM] environment. One known example is when a focusable custom component has an associated tooltip; a screen reader may not read the tooltip when focused. This is due to the complexity with [how focus is handled inside the Shadow DOM][ShadowFocus] as well as ID scoping.
 
 ## Demo
