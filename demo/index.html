@@ -108,6 +108,16 @@
 			</div>
 		</div>
 	</div>
+	<script>
+		document.body.addEventListener('d2l-tooltip-show', function(e) {
+			// eslint-disable-next-line no-console
+			console.log('d2l-tooltip-show', e);
+		});
+		document.body.addEventListener('d2l-tooltip-hide', function(e) {
+			// eslint-disable-next-line no-console
+			console.log('d2l-tooltip-hide', e);
+		});
+	</script>
 </body>
 
 </html>

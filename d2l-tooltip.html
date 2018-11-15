@@ -285,6 +285,9 @@ Polymer-based web component for a D2L tooltip
 				}
 
 				this.showing = true;
+				this.dispatchEvent(new CustomEvent(
+					'd2l-tooltip-show', { bubbles: true, composed: true }
+				));
 				this.updatePosition();
 			},
 
@@ -294,6 +297,9 @@ Polymer-based web component for a D2L tooltip
 				}
 
 				this.showing = false;
+				this.dispatchEvent(new CustomEvent(
+					'd2l-tooltip-hide', { bubbles: true, composed: true }
+				));
 				this.unlisten(this.document, 'tap', '_documentClickListener');
 			},
 
