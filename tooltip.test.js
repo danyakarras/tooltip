@@ -11,34 +11,34 @@ var browsers = {
 	}),
 	/* IE and Edge do not seem to time the screencaptures correctly with the hover and fail, so skipping them */
 	// ie11Windows: new SauceBrowserFactory({
-	// 	browser: 'internet explorer',
-	// 	version: '11',
-	// 	platform: 'WIN10',
-	// 	size: '1400x900'
+	//	 browser: 'internet explorer',
+	//	 version: '11',
+	//	 platform: 'WIN10',
+	//	 size: '1400x900'
 	// }),
 	// edgeWindows: new SauceBrowserFactory({
-	// 	browser: 'microsoftedge',
-	// 	platform: 'WIN10',
-	// 	size: '1400x900',
-	// 	tags: ['no-d2l-shadow']
+	//	 browser: 'microsoftedge',
+	//	 platform: 'WIN10',
+	//	 size: '1400x900',
+	//	 tags: ['no-d2l-shadow']
 	// }),
 	// REMOVING DUE TO CHROME WEBDRIVER ISSUE
 	// chromeMac: new SauceBrowserFactory({
-	// 	browser: 'Chrome',
-	// 	platform: 'SIERRA',
-	// 	size: '1400x900'
+	//	 browser: 'Chrome',
+	//	 platform: 'SIERRA',
+	//	 size: '1400x900'
 	// }),
 	/* Safari and Firefox throw mouseMoveTo selenium errors trying to execute the hover, so skipping them */
 	// safariMac: new SauceBrowserFactory({
-	// 	browser: 'Safari',
-	// 	platform: 'EL_CAPITAN',
-	// 	size: '1400x900',
-	// 	tags: ['no-d2l-shadow']
+	//	 browser: 'Safari',
+	//	 platform: 'EL_CAPITAN',
+	//	 size: '1400x900',
+	//	 tags: ['no-d2l-shadow']
 	// }),
 	// firefoxWindows: new SauceBrowserFactory({
-	// 	browser: 'firefox',
-	// 	platform: 'WIN10',
-	// 	size: '1400x900'
+	//	 browser: 'firefox',
+	//	 platform: 'WIN10',
+	//	 size: '1400x900'
 	// })
 };
 
