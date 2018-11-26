@@ -4,10 +4,11 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
 		<title>d2l-tooltip test</title>
-		<script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-		<script src="../../web-component-tester/browser.js"></script>
-		<link rel="import" href="../../iron-test-helpers/mock-interactions.html">
-		<link rel="import" href="../d2l-tooltip.html">
+		<script src="../../@babel/polyfill/browser.js"></script>
+		<script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
+		<script src="../../wct-browser-legacy/browser.js"></script>
+		<script type="module" src="../../@polymer/iron-test-helpers/mock-interactions.js"></script>
+		<script type="module" src="../d2l-tooltip.js"></script>
 	</head>
 	<body>
 		<test-fixture id="basic">
@@ -20,52 +21,54 @@
 			</template>
 		</test-fixture>
 
-		<script>
-			describe('d2l-tooltip', function() {
+		<script type="module">
+import '../../@polymer/iron-test-helpers/mock-interactions.js';
+import '../d2l-tooltip.js';
+describe('d2l-tooltip', function() {
 
-				var tooltipFixture, tooltip;
+	var tooltipFixture, tooltip;
 
-				describe('basic', function() {
+	describe('basic', function() {
 
-					beforeEach(function(done) {
-						tooltipFixture = fixture('basic');
-						tooltip = tooltipFixture.querySelector('d2l-tooltip');
-						flush(done);
-					});
+		beforeEach(function(done) {
+			tooltipFixture = fixture('basic');
+			tooltip = tooltipFixture.querySelector('d2l-tooltip');
+			flush(done);
+		});
 
-					it('should instantiate the element', function() {
-						expect(tooltip.is).to.equal('d2l-tooltip');
-					});
+		it('should instantiate the element', function() {
+			expect(tooltip.is).to.equal('d2l-tooltip');
+		});
 
-					it('should trigger the show event when target is focused', function(done) {
-						tooltipFixture.addEventListener('d2l-tooltip-show', function() {
-							requestAnimationFrame(function() {
-								expect(tooltip.hasAttribute('showing')).to.equal(true);
-								done();
-							});
-						});
-						tooltipFixture.querySelector('#basic-span').focus();
-					});
-
-					it('should trigger the hide event when target is focused', function(done) {
-						tooltipFixture.addEventListener('d2l-tooltip-show', function() {
-							requestAnimationFrame(function() {
-								const mouseleaveEvent = new Event('mouseleave');
-								tooltipFixture.querySelector('span').dispatchEvent(mouseleaveEvent);
-							});
-						});
-						tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
-							requestAnimationFrame(function() {
-								expect(tooltip.hasAttribute('showing')).to.equal(false);
-								done();
-							});
-						});
-						tooltipFixture.querySelector('span').focus();
-					});
-
+		it('should trigger the show event when target is focused', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				requestAnimationFrame(function() {
+					expect(tooltip.hasAttribute('showing')).to.equal(true);
+					done();
 				});
-
 			});
-		</script>
+			tooltipFixture.querySelector('#basic-span').focus();
+		});
+
+		it('should trigger the hide event when target is focused', function(done) {
+			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
+				requestAnimationFrame(function() {
+					const mouseleaveEvent = new Event('mouseleave');
+					tooltipFixture.querySelector('span').dispatchEvent(mouseleaveEvent);
+				});
+			});
+			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
+				requestAnimationFrame(function() {
+					expect(tooltip.hasAttribute('showing')).to.equal(false);
+					done();
+				});
+			});
+			tooltipFixture.querySelector('span').focus();
+		});
+
+	});
+
+});
+</script>
 	</body>
 </html>
