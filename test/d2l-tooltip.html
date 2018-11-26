@@ -53,7 +53,8 @@ describe('d2l-tooltip', function() {
 		it('should trigger the hide event when target is focused', function(done) {
 			tooltipFixture.addEventListener('d2l-tooltip-show', function() {
 				requestAnimationFrame(function() {
-					tooltipFixture.querySelector('a').focus();
+					const mouseleaveEvent = new Event('mouseleave');
+					tooltipFixture.querySelector('span').dispatchEvent(mouseleaveEvent);
 				});
 			});
 			tooltipFixture.addEventListener('d2l-tooltip-hide', function() {
