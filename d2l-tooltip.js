@@ -9,14 +9,14 @@ Polymer-based web component for a D2L tooltip
   from HTML and may be out of place here. Review them and
   then delete this comment!
 */
-import '../@polymer/polymer/polymer-legacy.js';
+import '@polymer/polymer/polymer-legacy.js';
 
-import '../d2l-colors/d2l-colors.js';
-import '../d2l-polymer-behaviors/d2l-id.js';
-import '../d2l-typography/d2l-typography-shared-styles.js';
-import { IronResizableBehavior } from '../@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
-import { Polymer } from '../@polymer/polymer/lib/legacy/polymer-fn.js';
-import { dom } from '../@polymer/polymer/lib/legacy/polymer.dom.js';
+import 'd2l-colors/d2l-colors.js';
+import 'd2l-polymer-behaviors/d2l-id.js';
+import 'd2l-typography/d2l-typography-shared-styles.js';
+import { IronResizableBehavior } from '@polymer/iron-resizable-behavior/iron-resizable-behavior.js';
+import { Polymer } from '@polymer/polymer/lib/legacy/polymer-fn.js';
+import { dom } from '@polymer/polymer/lib/legacy/polymer.dom.js';
 const $_documentContainer = document.createElement('template');
 
 $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
