@@ -51,11 +51,16 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
 				@apply --d2l-tooltip-mixin; /* needs to be down here to override any of the properties above */
 			}
 
-			:host([showing]) {
+			:host([showing]), :host([force-show]) {
 				display: inline-block;
 			}
 
-			:host([showing]) {
+			:host([force-show]) {
+				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
+				animation: d2l-tooltip-bottom-animation 200ms ease;
+			}
+
+			:host([showing]):not([force-show]) {
 				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
 				animation: d2l-tooltip-bottom-animation 200ms ease;
 			}
@@ -237,7 +242,14 @@ Polymer({
 		_tappedOn: {
 			type: Boolean,
 			value: false
-		}
+		},
+
+		forceShow: {
+			type: Boolean,
+			value: false,
+			reflectToAttribute: true,
+			observer: 'updateForceShow'
+		},
 	},
 
 	listeners: {
@@ -333,6 +345,15 @@ Polymer({
 
 		this._setTooltipStyle(tooltipPositions, targetPositions);
 		this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
+	},
+
+	updateForceShow: function(forceShow) {
+		if (forceShow) {
+			this.async(function() { this.updatePosition(); }.bind(this));
+		}
+		if (!forceShow) {
+			this.hide();
+		}
 	},
 
 	_getScrollVals: function() {
@@ -480,7 +501,7 @@ Polymer({
 	},
 
 	_addListeners: function() {
-		if (this._target) {
+		if (this._target && !this.forceShow) {
 			this.listen(this._target, 'mouseenter', 'show');
 			this.listen(this._target, 'focus', 'show');
 			this.listen(this._target, 'mouseleave', 'hide');
