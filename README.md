@@ -96,6 +96,12 @@ To constrain your tooltip to a certain area, pass in a `boundary` property conta
 { left: 10, right: 200 }
 ```
 
+Use the `force-show` attribute always display the tooltip, regardless of user interaction:
+```html
+<span class="box" id="target">My tooltip is always visible</span>
+<d2l-tooltip for="target" position="right" force-show>Hello world!</d2l-tooltip>
+```
+
 Custom CSS properties for styling:
 
 - All three properties should be set to style the box correctly:

@@ -20,6 +20,15 @@
 				</div>
 			</template>
 		</test-fixture>
+		<test-fixture id="force-show">
+			<template>
+				<div>
+					<span id="force-show-span" tabindex="-1">You can always see my tips</span>
+					<d2l-tooltip for="force-show-span" force-show>If I got a problem then a problem's got a problem.</d2l-tooltip>
+					<a href="https://www.google.com">some link</a>
+				</div>
+			</template>
+		</test-fixture>
 
 		<script type="module">
 import '@polymer/iron-test-helpers/mock-interactions.js';
@@ -67,7 +76,22 @@ describe('d2l-tooltip', function() {
 		});
 
 	});
+	describe('force-show', function() {
 
+		beforeEach(function(done) {
+			tooltipFixture = fixture('force-show');
+			tooltip = tooltipFixture.querySelector('d2l-tooltip');
+			flush(done);
+		});
+
+		it('should instantiate the element', function() {
+			expect(tooltip.is).to.equal('d2l-tooltip');
+		});
+
+		it('should display the tooltip by default', function() {
+			expect(tooltip.hidden).to.equal(false);
+		});
+	});
 });
 </script>
 	</body>

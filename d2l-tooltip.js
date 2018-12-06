@@ -177,7 +177,7 @@ $_documentContainer.innerHTML = `<dom-module id="d2l-tooltip">
 			<slot></slot>
 		</div>
 	</template>
-	
+
 </dom-module>`;
 
 document.head.appendChild($_documentContainer.content);
@@ -248,8 +248,8 @@ Polymer({
 			type: Boolean,
 			value: false,
 			reflectToAttribute: true,
-			observer: 'updateForceShow'
-		},
+			observer: '_updateForceShow'
+		}
 	},
 
 	listeners: {
@@ -347,11 +347,10 @@ Polymer({
 		this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
 	},
 
-	updateForceShow: function(forceShow) {
+	_updateForceShow: function(forceShow) {
 		if (forceShow) {
 			this.async(function() { this.updatePosition(); }.bind(this));
-		}
-		if (!forceShow) {
+		} else {
 			this.hide();
 		}
 	},
