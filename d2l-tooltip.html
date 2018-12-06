@@ -238,8 +238,8 @@ Polymer-based web component for a D2L tooltip
 					type: Boolean,
 					value: false,
 					reflectToAttribute: true,
-					observer: 'updateForceShow'
-				},
+					observer: '_updateForceShow'
+				}
 			},
 
 			listeners: {
@@ -337,11 +337,10 @@ Polymer-based web component for a D2L tooltip
 				this._setTriangleStyle(thisRect, tooltipPositions, targetPositions, boundaryShifts);
 			},
 
-			updateForceShow: function(forceShow) {
+			_updateForceShow: function(forceShow) {
 				if (forceShow) {
 					this.async(function() { this.updatePosition(); }.bind(this));
-				}
-				if (!forceShow) {
+				} else {
 					this.hide();
 				}
 			},
