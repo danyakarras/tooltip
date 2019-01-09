@@ -47,12 +47,9 @@ Polymer-based web component for a D2L tooltip
 				display: inline-block;
 			}
 
-			:host([force-show]) {
-				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
-				animation: d2l-tooltip-bottom-animation 200ms ease;
-			}
-
-			:host([showing]):not([force-show]) {
+			:host([force-show]),
+			:host([showing]):not([force-show]),
+			:host([position="bottom"]) {
 				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
 				animation: d2l-tooltip-bottom-animation 200ms ease;
 			}
@@ -60,11 +57,6 @@ Polymer-based web component for a D2L tooltip
 			:host([position="top"]) {
 				-webkit-animation: d2l-tooltip-top-animation 200ms ease;
 				animation: d2l-tooltip-top-animation 200ms ease;
-			}
-			
-			:host([position="bottom"]) {
-				-webkit-animation: d2l-tooltip-bottom-animation 200ms ease;
-				animation: d2l-tooltip-bottom-animation 200ms ease;
 			}
 
 			:host([position="left"]) {
